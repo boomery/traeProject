@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "NoteListViewController.h"
 #import "VideoFeedViewController.h"
+#import "WebViewController.h"
 @interface SceneDelegate ()
 
 @end
@@ -34,9 +35,16 @@
     UIImage *noteSelectedImage = [noteImage imageWithTintColor:[UIColor whiteColor]];
     noteNavController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"笔记" image:noteImage selectedImage:noteSelectedImage];
     
+    // 创建浏览器页面
+    WebViewController *webVC = [[WebViewController alloc] init];
+    UINavigationController *webNavController = [[UINavigationController alloc] initWithRootViewController:webVC];
+    UIImage *webImage = [[UIImage systemImageNamed:@"safari.fill"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UIImage *webSelectedImage = [webImage imageWithTintColor:[UIColor whiteColor]];
+    webNavController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"浏览器" image:webImage selectedImage:webSelectedImage];
+    
     // 创建TabBarController并设置样式
     UITabBarController *tabBarController = [[UITabBarController alloc] init];
-    tabBarController.viewControllers = @[videoNavController, noteNavController];
+    tabBarController.viewControllers = @[webNavController, videoNavController, noteNavController];
     
     // 设置TabBar样式
     UITabBar *tabBar = tabBarController.tabBar;
