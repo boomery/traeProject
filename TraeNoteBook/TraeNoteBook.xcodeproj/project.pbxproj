@@ -18,12 +18,13 @@
 		3F33F2D92D6EF17A0035506E /* TraeNoteBookUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F2D82D6EF17A0035506E /* TraeNoteBookUITests.m */; };
 		3F33F2DB2D6EF17A0035506E /* TraeNoteBookUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F2DA2D6EF17A0035506E /* TraeNoteBookUITestsLaunchTests.m */; };
 		3F33F30B2D6EF31A0035506E /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3042D6EF3190035506E /* SceneDelegate.m */; };
-		3F33F30C2D6EF31A0035506E /* TraeNoteBook.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3052D6EF3190035506E /* TraeNoteBook.xcdatamodeld */; };
 		3F33F30E2D6EF31A0035506E /* NoteListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F30A2D6EF3190035506E /* NoteListViewController.m */; };
 		3F33F3112D6EF3740035506E /* Note+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3102D6EF3740035506E /* Note+CoreDataClass.m */; };
 		3F33F3142D6EF93D0035506E /* VideoFeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3122D6EF93D0035506E /* VideoFeedViewController.m */; };
 		3F33F3182D6FFE200035506E /* VideoFeedCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3162D6FFE200035506E /* VideoFeedCollectionViewCell.m */; };
 		3F33F31B2D7002640035506E /* VideoFeedCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F31A2D7002640035506E /* VideoFeedCacheManager.m */; };
+		3F33F31E2D700EAF0035506E /* TraeNoteBook.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F31C2D700EAF0035506E /* TraeNoteBook.xcdatamodeld */; };
+		3F33F3202D7012150035506E /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F33F31F2D7012150035506E /* icon.png */; };
 		80A3241BC093978B47A74F70 /* Pods_TraeNoteBookTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 826F268F058E132E14C0066B /* Pods_TraeNoteBookTests.framework */; };
 		EFBC7C83CAC745496B0D19B6 /* Pods_TraeNoteBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C88FC051CA59615FC7EF25A /* Pods_TraeNoteBook.framework */; };
 /* End PBXBuildFile section */
@@ -66,7 +67,6 @@
 		3F33F2D82D6EF17A0035506E /* TraeNoteBookUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TraeNoteBookUITests.m; sourceTree = "<group>"; };
 		3F33F2DA2D6EF17A0035506E /* TraeNoteBookUITestsLaunchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TraeNoteBookUITestsLaunchTests.m; sourceTree = "<group>"; };
 		3F33F3042D6EF3190035506E /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
-		3F33F3062D6EF3190035506E /* TraeNoteBook.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TraeNoteBook.xcdatamodel; sourceTree = "<group>"; };
 		3F33F3082D6EF3190035506E /* NoteListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteListViewController.h; sourceTree = "<group>"; };
 		3F33F30A2D6EF3190035506E /* NoteListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoteListViewController.m; sourceTree = "<group>"; };
 		3F33F30F2D6EF3740035506E /* Note+CoreDataClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Note+CoreDataClass.h"; sourceTree = "<group>"; };
@@ -77,6 +77,8 @@
 		3F33F3172D6FFE200035506E /* VideoFeedCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoFeedCollectionViewCell.h; sourceTree = "<group>"; };
 		3F33F3192D7002640035506E /* VideoFeedCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoFeedCacheManager.h; sourceTree = "<group>"; };
 		3F33F31A2D7002640035506E /* VideoFeedCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoFeedCacheManager.m; sourceTree = "<group>"; };
+		3F33F31D2D700EAF0035506E /* TraeNoteBook.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TraeNoteBook.xcdatamodel; sourceTree = "<group>"; };
+		3F33F31F2D7012150035506E /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		4E43B8BB6A7B1D62D63316FE /* Pods-TraeNoteBook-TraeNoteBookUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TraeNoteBook-TraeNoteBookUITests.release.xcconfig"; path = "Target Support Files/Pods-TraeNoteBook-TraeNoteBookUITests/Pods-TraeNoteBook-TraeNoteBookUITests.release.xcconfig"; sourceTree = "<group>"; };
 		81056A3AF21D93B7E8C9A077 /* Pods-TraeNoteBookTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TraeNoteBookTests.debug.xcconfig"; path = "Target Support Files/Pods-TraeNoteBookTests/Pods-TraeNoteBookTests.debug.xcconfig"; sourceTree = "<group>"; };
 		826F268F058E132E14C0066B /* Pods_TraeNoteBookTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TraeNoteBookTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -138,6 +140,7 @@
 		3F33F2AE2D6EF1780035506E /* TraeNoteBook */ = {
 			isa = PBXGroup;
 			children = (
+				3F33F31F2D7012150035506E /* icon.png */,
 				3F33F2AF2D6EF1780035506E /* AppDelegate.h */,
 				3F33F2B02D6EF1780035506E /* AppDelegate.m */,
 				3F33F2BE2D6EF1790035506E /* Assets.xcassets */,
@@ -157,7 +160,7 @@
 				3F33F31A2D7002640035506E /* VideoFeedCacheManager.m */,
 				3F33F2B22D6EF1780035506E /* SceneDelegate.h */,
 				3F33F3042D6EF3190035506E /* SceneDelegate.m */,
-				3F33F3052D6EF3190035506E /* TraeNoteBook.xcdatamodeld */,
+				3F33F31C2D700EAF0035506E /* TraeNoteBook.xcdatamodeld */,
 				3F33F2B52D6EF1780035506E /* ViewController.h */,
 				3F33F2B62D6EF1780035506E /* ViewController.m */,
 			);
@@ -312,6 +315,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F33F3202D7012150035506E /* icon.png in Resources */,
 				3F33F2BF2D6EF1790035506E /* Assets.xcassets in Resources */,
 				3F33F2C22D6EF1790035506E /* Base in Resources */,
 				3F33F2BA2D6EF1780035506E /* Base in Resources */,
@@ -442,10 +446,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3F33F30C2D6EF31A0035506E /* TraeNoteBook.xcdatamodeld in Sources */,
 				3F33F3112D6EF3740035506E /* Note+CoreDataClass.m in Sources */,
 				3F33F2C52D6EF1790035506E /* main.m in Sources */,
 				3F33F3182D6FFE200035506E /* VideoFeedCollectionViewCell.m in Sources */,
+				3F33F31E2D700EAF0035506E /* TraeNoteBook.xcdatamodeld in Sources */,
 				3F33F30E2D6EF31A0035506E /* NoteListViewController.m in Sources */,
 				3F33F30B2D6EF31A0035506E /* SceneDelegate.m in Sources */,
 				3F33F31B2D7002640035506E /* VideoFeedCacheManager.m in Sources */,
@@ -793,14 +797,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		3F33F3052D6EF3190035506E /* TraeNoteBook.xcdatamodeld */ = {
+		3F33F31C2D700EAF0035506E /* TraeNoteBook.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				3F33F3062D6EF3190035506E /* TraeNoteBook.xcdatamodel */,
+				3F33F31D2D700EAF0035506E /* TraeNoteBook.xcdatamodel */,
 			);
-			currentVersion = 3F33F3062D6EF3190035506E /* TraeNoteBook.xcdatamodel */;
+			currentVersion = 3F33F31D2D700EAF0035506E /* TraeNoteBook.xcdatamodel */;
 			name = TraeNoteBook.xcdatamodeld;
-			path = /Users/chaoxinzhang/traeTest/TraeNoteBook/TraeNoteBook/TraeNoteBook.xcdatamodeld;
+			path = /Users/chaoxinzhang/traeProject/TraeNoteBook/TraeNoteBook/TraeNoteBook.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
