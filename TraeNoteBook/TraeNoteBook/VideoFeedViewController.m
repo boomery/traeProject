@@ -404,6 +404,7 @@
     }
 }
 
+
 - (void)saveVideoToAlbum:(UIButton *)button {
     // 获取对应的视频信息
     UIView *buttonSuperview = button.superview;
@@ -429,71 +430,120 @@
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (status == PHAuthorizationStatusAuthorized) {
-                // 显示下载进度
-                UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
-                indicator.center = button.center;
-                [button.superview addSubview:indicator];
-                [indicator startAnimating];
+                // 创建圆环进度条
+                CGFloat size = 40.0;
+                UIView *progressContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size, size)];
+                progressContainer.center = button.center;
+                [button.superview addSubview:progressContainer];
+                
+                // 创建背景圆环
+                CAShapeLayer *backgroundLayer = [CAShapeLayer layer];
+                UIBezierPath *circularPath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(size/2, size/2)
+                                                                          radius:(size-4)/2
+                                                                      startAngle:-M_PI_2
+                                                                        endAngle:2*M_PI-M_PI_2
+                                                                       clockwise:YES];
+                backgroundLayer.path = circularPath.CGPath;
+                backgroundLayer.strokeColor = [UIColor lightGrayColor].CGColor;
+                backgroundLayer.fillColor = [UIColor clearColor].CGColor;
+                backgroundLayer.lineWidth = 2.0;
+                [progressContainer.layer addSublayer:backgroundLayer];
+                
+                // 创建进度圆环
+                CAShapeLayer *progressLayer = [CAShapeLayer layer];
+                progressLayer.path = circularPath.CGPath;
+                progressLayer.strokeColor = [UIColor systemBlueColor].CGColor;
+                progressLayer.fillColor = [UIColor clearColor].CGColor;
+                progressLayer.lineWidth = 2.0;
+                progressLayer.strokeEnd = 0.0;
+                [progressContainer.layer addSublayer:progressLayer];
+                
                 button.hidden = YES;
                 
-                // 下载视频
-                NSURLSession *session = [NSURLSession sharedSession];
-                NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithURL:videoURL completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
-                    if (error) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self showAlert:@"下载失败" message:error.localizedDescription];
-                            [indicator removeFromSuperview];
-                            button.hidden = NO;
-                        });
-                        return;
-                    }
-                    
-                    // 创建临时文件路径
-                    NSString *tmpDirPath = NSTemporaryDirectory();
-                    NSString *tmpFilePath = [tmpDirPath stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
-                    tmpFilePath = [tmpFilePath stringByAppendingPathExtension:@"mp4"];
-                    NSURL *tmpFileURL = [NSURL fileURLWithPath:tmpFilePath];
-                    
-                    // 将下载的文件移动到临时目录
-                    NSError *moveError;
-                    [[NSFileManager defaultManager] moveItemAtURL:location toURL:tmpFileURL error:&moveError];
-                    
-                    if (moveError) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self showAlert:@"保存失败" message:@"无法移动临时文件"];
-                            [indicator removeFromSuperview];
-                            button.hidden = NO;
-                        });
-                        return;
-                    }
-                    
-                    // 保存到相册
-                    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-                        PHAssetCreationRequest *request = [PHAssetCreationRequest creationRequestForAsset];
-                        [request addResourceWithType:PHAssetResourceTypeVideo fileURL:tmpFileURL options:nil];
-                        request.creationDate = [NSDate date]; // 设置为保存时的时间
-                    } completionHandler:^(BOOL success, NSError *error) {
-                        // 清理临时文件
-                        [[NSFileManager defaultManager] removeItemAtURL:tmpFileURL error:nil];
-                        
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [indicator removeFromSuperview];
-                            button.hidden = NO;
-                            
-                            if (success) {
-                                [self showAlert:@"保存成功" message:@"视频已保存到相册"];
-                            } else {
-                                [self showAlert:@"保存失败" message:error.localizedDescription];
-                            }
-                        });
-                    }];
-                }];
+                // 创建下载会话
+                NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+                NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:[NSOperationQueue mainQueue]];
+                
+                // 开始下载任务
+                NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithURL:videoURL];
+                
+                // 保存进度条和按钮的引用，用于在代理方法中更新
+                objc_setAssociatedObject(downloadTask, "progressView", progressContainer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+                objc_setAssociatedObject(downloadTask, "saveButton", button, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+                
                 [downloadTask resume];
             } else {
                 [self showAlert:@"无法访问相册" message:@"请在设置中允许访问相册"];
             }
         });
     }];
+}
+
+#pragma mark - NSURLSessionDownloadDelegate
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+    UIView *progressContainer = objc_getAssociatedObject(downloadTask, "progressView");
+    float progress = (float)totalBytesWritten / (float)totalBytesExpectedToWrite;
+    CAShapeLayer *progressLayer = (CAShapeLayer *)[[progressContainer.layer sublayers] lastObject];
+    progressLayer.strokeEnd = progress;
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location {
+    UIProgressView *progressView = objc_getAssociatedObject(downloadTask, "progressView");
+    UIButton *button = objc_getAssociatedObject(downloadTask, "saveButton");
+    
+    // 创建临时文件路径
+    NSString *tmpDirPath = NSTemporaryDirectory();
+    NSString *tmpFilePath = [tmpDirPath stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
+    tmpFilePath = [tmpFilePath stringByAppendingPathExtension:@"mp4"];
+    NSURL *tmpFileURL = [NSURL fileURLWithPath:tmpFilePath];
+    
+    // 将下载的文件移动到临时目录
+    NSError *moveError;
+    [[NSFileManager defaultManager] moveItemAtURL:location toURL:tmpFileURL error:&moveError];
+    
+    if (moveError) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self showAlert:@"保存失败" message:@"无法移动临时文件"];
+            [progressView removeFromSuperview];
+            button.hidden = NO;
+        });
+        return;
+    }
+    
+    // 保存到相册
+    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+        PHAssetCreationRequest *request = [PHAssetCreationRequest creationRequestForAsset];
+        [request addResourceWithType:PHAssetResourceTypeVideo fileURL:tmpFileURL options:nil];
+        request.creationDate = [NSDate date];
+    } completionHandler:^(BOOL success, NSError *error) {
+        // 清理临时文件
+        [[NSFileManager defaultManager] removeItemAtURL:tmpFileURL error:nil];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [progressView removeFromSuperview];
+            button.hidden = NO;
+            
+            if (success) {
+                [self showAlert:@"保存成功" message:@"视频已保存到相册"];
+            } else {
+                [self showAlert:@"保存失败" message:error.localizedDescription];
+            }
+        });
+    }];
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
+    if (error) {
+        UIProgressView *progressView = objc_getAssociatedObject(task, "progressView");
+        UIButton *button = objc_getAssociatedObject(task, "saveButton");
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self showAlert:@"下载失败" message:error.localizedDescription];
+            [progressView removeFromSuperview];
+            button.hidden = NO;
+        });
+    }
 }
 
 - (void)showAlert:(NSString *)title message:(NSString *)message {
