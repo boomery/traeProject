@@ -53,13 +53,13 @@
             if (!detectedUrls.has(url) && isVideoUrl(url)) {\
                 console.log('检测到视频资源:', type, url);\
                 detectedUrls.add(url);\
-                window.webkit.messageHandlers.videoResource.postMessage([{
-                    type: type,
-                    url: url,
-                    title: document.title || '未知视频'
-                }]);
-            }
-        }
+                window.webkit.messageHandlers.videoResource.postMessage([{\
+                    type: type,\
+                    url: url,\
+                    title: document.title || '未知视频'\
+                }]);\
+            }\
+        }\
         \
         const originalXHR = window.XMLHttpRequest;\
         window.XMLHttpRequest = function() {\
@@ -218,10 +218,10 @@
     
     
     //打开嗅探资源列表按钮
-    UIBarButtonItem *openVideoListButton = [[UIBarButtonItem alloc] initWithTitle:@"列表"
-                                                                            style:UIBarButtonItemStylePlain
-                                                                            target:self
-                                                                            action:@selector(toggleVideoListPanel)];
+    self.openVideoListButton = [[UIBarButtonItem alloc] initWithTitle:@"列表 (0)"
+                                                             style:UIBarButtonItemStylePlain
+                                                            target:self
+                                                            action:@selector(toggleVideoListPanel)];
     
     
     // 刷新按钮
@@ -233,7 +233,7 @@
     UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
                                                                                    target:nil
                                                                                    action:nil];
-    self.toolbarItems = @[self.backButton, flexibleSpace, self.forwardButton, flexibleSpace, openVideoListButton, self.refreshButton];
+    self.toolbarItems = @[self.backButton, flexibleSpace, self.forwardButton, flexibleSpace, self.openVideoListButton, self.refreshButton];
     self.navigationController.toolbarHidden = NO;
 }
 
@@ -373,6 +373,7 @@
     // 更新UI
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.togglePanelButton setTitle:[NSString stringWithFormat:@"视频资源 (%lu)", (unsigned long)self.videoResources.count] forState:UIControlStateNormal];
+        [self.openVideoListButton setTitle:[NSString stringWithFormat:@"列表 (%lu)", (unsigned long)self.videoResources.count]];
         [self.videoListTableView reloadData];
     });
 }
