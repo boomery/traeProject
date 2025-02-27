@@ -1,0 +1,16 @@
+PODS:
+  - MJRefresh (3.7.9)
+
+DEPENDENCIES:
+  - MJRefresh
+
+SPEC REPOS:
+  trunk:
+    - MJRefresh
+
+SPEC CHECKSUMS:
+  MJRefresh: ff9e531227924c84ce459338414550a05d2aea78
+
+PODFILE CHECKSUM: 937c3e7fee15a757b50e841ce9bafc02e095df5a
+
+COCOAPODS: 1.15.2

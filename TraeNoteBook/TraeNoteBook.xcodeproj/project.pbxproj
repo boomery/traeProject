@@ -1,0 +1,810 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		31E46BAB73F13216EF847B7C /* Pods_TraeNoteBook_TraeNoteBookUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16751BE12E808FAB985EB870 /* Pods_TraeNoteBook_TraeNoteBookUITests.framework */; };
+		3F33F2B12D6EF1780035506E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F2B02D6EF1780035506E /* AppDelegate.m */; };
+		3F33F2B72D6EF1780035506E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F2B62D6EF1780035506E /* ViewController.m */; };
+		3F33F2BA2D6EF1780035506E /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 3F33F2B92D6EF1780035506E /* Base */; };
+		3F33F2BF2D6EF1790035506E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F33F2BE2D6EF1790035506E /* Assets.xcassets */; };
+		3F33F2C22D6EF1790035506E /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 3F33F2C12D6EF1790035506E /* Base */; };
+		3F33F2C52D6EF1790035506E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F2C42D6EF1790035506E /* main.m */; };
+		3F33F2CF2D6EF17A0035506E /* TraeNoteBookTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F2CE2D6EF17A0035506E /* TraeNoteBookTests.m */; };
+		3F33F2D92D6EF17A0035506E /* TraeNoteBookUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F2D82D6EF17A0035506E /* TraeNoteBookUITests.m */; };
+		3F33F2DB2D6EF17A0035506E /* TraeNoteBookUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F2DA2D6EF17A0035506E /* TraeNoteBookUITestsLaunchTests.m */; };
+		3F33F30B2D6EF31A0035506E /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3042D6EF3190035506E /* SceneDelegate.m */; };
+		3F33F30C2D6EF31A0035506E /* TraeNoteBook.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3052D6EF3190035506E /* TraeNoteBook.xcdatamodeld */; };
+		3F33F30E2D6EF31A0035506E /* NoteListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F30A2D6EF3190035506E /* NoteListViewController.m */; };
+		3F33F3112D6EF3740035506E /* Note+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3102D6EF3740035506E /* Note+CoreDataClass.m */; };
+		3F33F3142D6EF93D0035506E /* VideoFeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3122D6EF93D0035506E /* VideoFeedViewController.m */; };
+		3F33F3182D6FFE200035506E /* VideoFeedCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3162D6FFE200035506E /* VideoFeedCollectionViewCell.m */; };
+		3F33F31B2D7002640035506E /* VideoFeedCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F31A2D7002640035506E /* VideoFeedCacheManager.m */; };
+		80A3241BC093978B47A74F70 /* Pods_TraeNoteBookTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 826F268F058E132E14C0066B /* Pods_TraeNoteBookTests.framework */; };
+		EFBC7C83CAC745496B0D19B6 /* Pods_TraeNoteBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C88FC051CA59615FC7EF25A /* Pods_TraeNoteBook.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3F33F2CB2D6EF17A0035506E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3F33F2A42D6EF1770035506E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3F33F2AB2D6EF1780035506E;
+			remoteInfo = TraeNoteBook;
+		};
+		3F33F2D52D6EF17A0035506E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3F33F2A42D6EF1770035506E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3F33F2AB2D6EF1780035506E;
+			remoteInfo = TraeNoteBook;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0C88FC051CA59615FC7EF25A /* Pods_TraeNoteBook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TraeNoteBook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		16751BE12E808FAB985EB870 /* Pods_TraeNoteBook_TraeNoteBookUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TraeNoteBook_TraeNoteBookUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		29A04BFC5D0686142D2C5506 /* Pods-TraeNoteBook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TraeNoteBook.debug.xcconfig"; path = "Target Support Files/Pods-TraeNoteBook/Pods-TraeNoteBook.debug.xcconfig"; sourceTree = "<group>"; };
+		3F33F2AC2D6EF1780035506E /* TraeNoteBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TraeNoteBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F33F2AF2D6EF1780035506E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		3F33F2B02D6EF1780035506E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		3F33F2B22D6EF1780035506E /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		3F33F2B52D6EF1780035506E /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		3F33F2B62D6EF1780035506E /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		3F33F2B92D6EF1780035506E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3F33F2BE2D6EF1790035506E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3F33F2C12D6EF1790035506E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3F33F2C32D6EF1790035506E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3F33F2C42D6EF1790035506E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3F33F2CA2D6EF17A0035506E /* TraeNoteBookTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TraeNoteBookTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F33F2CE2D6EF17A0035506E /* TraeNoteBookTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TraeNoteBookTests.m; sourceTree = "<group>"; };
+		3F33F2D42D6EF17A0035506E /* TraeNoteBookUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TraeNoteBookUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F33F2D82D6EF17A0035506E /* TraeNoteBookUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TraeNoteBookUITests.m; sourceTree = "<group>"; };
+		3F33F2DA2D6EF17A0035506E /* TraeNoteBookUITestsLaunchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TraeNoteBookUITestsLaunchTests.m; sourceTree = "<group>"; };
+		3F33F3042D6EF3190035506E /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
+		3F33F3062D6EF3190035506E /* TraeNoteBook.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TraeNoteBook.xcdatamodel; sourceTree = "<group>"; };
+		3F33F3082D6EF3190035506E /* NoteListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteListViewController.h; sourceTree = "<group>"; };
+		3F33F30A2D6EF3190035506E /* NoteListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoteListViewController.m; sourceTree = "<group>"; };
+		3F33F30F2D6EF3740035506E /* Note+CoreDataClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Note+CoreDataClass.h"; sourceTree = "<group>"; };
+		3F33F3102D6EF3740035506E /* Note+CoreDataClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Note+CoreDataClass.m"; sourceTree = "<group>"; };
+		3F33F3122D6EF93D0035506E /* VideoFeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoFeedViewController.m; sourceTree = "<group>"; };
+		3F33F3132D6EF93D0035506E /* VideoFeedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoFeedViewController.h; sourceTree = "<group>"; };
+		3F33F3162D6FFE200035506E /* VideoFeedCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoFeedCollectionViewCell.m; sourceTree = "<group>"; };
+		3F33F3172D6FFE200035506E /* VideoFeedCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoFeedCollectionViewCell.h; sourceTree = "<group>"; };
+		3F33F3192D7002640035506E /* VideoFeedCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoFeedCacheManager.h; sourceTree = "<group>"; };
+		3F33F31A2D7002640035506E /* VideoFeedCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoFeedCacheManager.m; sourceTree = "<group>"; };
+		4E43B8BB6A7B1D62D63316FE /* Pods-TraeNoteBook-TraeNoteBookUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TraeNoteBook-TraeNoteBookUITests.release.xcconfig"; path = "Target Support Files/Pods-TraeNoteBook-TraeNoteBookUITests/Pods-TraeNoteBook-TraeNoteBookUITests.release.xcconfig"; sourceTree = "<group>"; };
+		81056A3AF21D93B7E8C9A077 /* Pods-TraeNoteBookTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TraeNoteBookTests.debug.xcconfig"; path = "Target Support Files/Pods-TraeNoteBookTests/Pods-TraeNoteBookTests.debug.xcconfig"; sourceTree = "<group>"; };
+		826F268F058E132E14C0066B /* Pods_TraeNoteBookTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TraeNoteBookTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8FF28F69009B8781383ACAF7 /* Pods-TraeNoteBook-TraeNoteBookUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TraeNoteBook-TraeNoteBookUITests.debug.xcconfig"; path = "Target Support Files/Pods-TraeNoteBook-TraeNoteBookUITests/Pods-TraeNoteBook-TraeNoteBookUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		B751374D6E2490293A34952A /* Pods-TraeNoteBook.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TraeNoteBook.release.xcconfig"; path = "Target Support Files/Pods-TraeNoteBook/Pods-TraeNoteBook.release.xcconfig"; sourceTree = "<group>"; };
+		E31B6C8DEB7767D0C2E8B950 /* Pods-TraeNoteBookTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TraeNoteBookTests.release.xcconfig"; path = "Target Support Files/Pods-TraeNoteBookTests/Pods-TraeNoteBookTests.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3F33F2A92D6EF1780035506E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EFBC7C83CAC745496B0D19B6 /* Pods_TraeNoteBook.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3F33F2C72D6EF17A0035506E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				80A3241BC093978B47A74F70 /* Pods_TraeNoteBookTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3F33F2D12D6EF17A0035506E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31E46BAB73F13216EF847B7C /* Pods_TraeNoteBook_TraeNoteBookUITests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3F33F2A32D6EF1770035506E = {
+			isa = PBXGroup;
+			children = (
+				3F33F2AE2D6EF1780035506E /* TraeNoteBook */,
+				3F33F2CD2D6EF17A0035506E /* TraeNoteBookTests */,
+				3F33F2D72D6EF17A0035506E /* TraeNoteBookUITests */,
+				3F33F2AD2D6EF1780035506E /* Products */,
+				9B466148B682C87E46FA3EBC /* Pods */,
+				A1BA302CC4CBED4DBE9B3617 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		3F33F2AD2D6EF1780035506E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3F33F2AC2D6EF1780035506E /* TraeNoteBook.app */,
+				3F33F2CA2D6EF17A0035506E /* TraeNoteBookTests.xctest */,
+				3F33F2D42D6EF17A0035506E /* TraeNoteBookUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3F33F2AE2D6EF1780035506E /* TraeNoteBook */ = {
+			isa = PBXGroup;
+			children = (
+				3F33F2AF2D6EF1780035506E /* AppDelegate.h */,
+				3F33F2B02D6EF1780035506E /* AppDelegate.m */,
+				3F33F2BE2D6EF1790035506E /* Assets.xcassets */,
+				3F33F2C32D6EF1790035506E /* Info.plist */,
+				3F33F2C02D6EF1790035506E /* LaunchScreen.storyboard */,
+				3F33F2C42D6EF1790035506E /* main.m */,
+				3F33F2B82D6EF1780035506E /* Main.storyboard */,
+				3F33F30F2D6EF3740035506E /* Note+CoreDataClass.h */,
+				3F33F3102D6EF3740035506E /* Note+CoreDataClass.m */,
+				3F33F3082D6EF3190035506E /* NoteListViewController.h */,
+				3F33F30A2D6EF3190035506E /* NoteListViewController.m */,
+				3F33F3132D6EF93D0035506E /* VideoFeedViewController.h */,
+				3F33F3122D6EF93D0035506E /* VideoFeedViewController.m */,
+				3F33F3172D6FFE200035506E /* VideoFeedCollectionViewCell.h */,
+				3F33F3162D6FFE200035506E /* VideoFeedCollectionViewCell.m */,
+				3F33F3192D7002640035506E /* VideoFeedCacheManager.h */,
+				3F33F31A2D7002640035506E /* VideoFeedCacheManager.m */,
+				3F33F2B22D6EF1780035506E /* SceneDelegate.h */,
+				3F33F3042D6EF3190035506E /* SceneDelegate.m */,
+				3F33F3052D6EF3190035506E /* TraeNoteBook.xcdatamodeld */,
+				3F33F2B52D6EF1780035506E /* ViewController.h */,
+				3F33F2B62D6EF1780035506E /* ViewController.m */,
+			);
+			path = TraeNoteBook;
+			sourceTree = "<group>";
+		};
+		3F33F2CD2D6EF17A0035506E /* TraeNoteBookTests */ = {
+			isa = PBXGroup;
+			children = (
+				3F33F2CE2D6EF17A0035506E /* TraeNoteBookTests.m */,
+			);
+			path = TraeNoteBookTests;
+			sourceTree = "<group>";
+		};
+		3F33F2D72D6EF17A0035506E /* TraeNoteBookUITests */ = {
+			isa = PBXGroup;
+			children = (
+				3F33F2D82D6EF17A0035506E /* TraeNoteBookUITests.m */,
+				3F33F2DA2D6EF17A0035506E /* TraeNoteBookUITestsLaunchTests.m */,
+			);
+			path = TraeNoteBookUITests;
+			sourceTree = "<group>";
+		};
+		9B466148B682C87E46FA3EBC /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				29A04BFC5D0686142D2C5506 /* Pods-TraeNoteBook.debug.xcconfig */,
+				B751374D6E2490293A34952A /* Pods-TraeNoteBook.release.xcconfig */,
+				8FF28F69009B8781383ACAF7 /* Pods-TraeNoteBook-TraeNoteBookUITests.debug.xcconfig */,
+				4E43B8BB6A7B1D62D63316FE /* Pods-TraeNoteBook-TraeNoteBookUITests.release.xcconfig */,
+				81056A3AF21D93B7E8C9A077 /* Pods-TraeNoteBookTests.debug.xcconfig */,
+				E31B6C8DEB7767D0C2E8B950 /* Pods-TraeNoteBookTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		A1BA302CC4CBED4DBE9B3617 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0C88FC051CA59615FC7EF25A /* Pods_TraeNoteBook.framework */,
+				16751BE12E808FAB985EB870 /* Pods_TraeNoteBook_TraeNoteBookUITests.framework */,
+				826F268F058E132E14C0066B /* Pods_TraeNoteBookTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3F33F2AB2D6EF1780035506E /* TraeNoteBook */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3F33F2DE2D6EF17A0035506E /* Build configuration list for PBXNativeTarget "TraeNoteBook" */;
+			buildPhases = (
+				BDFA85508EF11954661958DD /* [CP] Check Pods Manifest.lock */,
+				3F33F2A82D6EF1780035506E /* Sources */,
+				3F33F2A92D6EF1780035506E /* Frameworks */,
+				3F33F2AA2D6EF1780035506E /* Resources */,
+				2504A9D778563BEF8AF96A1F /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TraeNoteBook;
+			productName = TraeNoteBook;
+			productReference = 3F33F2AC2D6EF1780035506E /* TraeNoteBook.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3F33F2C92D6EF17A0035506E /* TraeNoteBookTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3F33F2E12D6EF17A0035506E /* Build configuration list for PBXNativeTarget "TraeNoteBookTests" */;
+			buildPhases = (
+				F5549145C4648FA723878EFA /* [CP] Check Pods Manifest.lock */,
+				3F33F2C62D6EF17A0035506E /* Sources */,
+				3F33F2C72D6EF17A0035506E /* Frameworks */,
+				3F33F2C82D6EF17A0035506E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3F33F2CC2D6EF17A0035506E /* PBXTargetDependency */,
+			);
+			name = TraeNoteBookTests;
+			productName = TraeNoteBookTests;
+			productReference = 3F33F2CA2D6EF17A0035506E /* TraeNoteBookTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		3F33F2D32D6EF17A0035506E /* TraeNoteBookUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3F33F2E42D6EF17A0035506E /* Build configuration list for PBXNativeTarget "TraeNoteBookUITests" */;
+			buildPhases = (
+				872B9FD575478C9DD2994AB8 /* [CP] Check Pods Manifest.lock */,
+				3F33F2D02D6EF17A0035506E /* Sources */,
+				3F33F2D12D6EF17A0035506E /* Frameworks */,
+				3F33F2D22D6EF17A0035506E /* Resources */,
+				108A9F28885125A00679D047 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3F33F2D62D6EF17A0035506E /* PBXTargetDependency */,
+			);
+			name = TraeNoteBookUITests;
+			productName = TraeNoteBookUITests;
+			productReference = 3F33F2D42D6EF17A0035506E /* TraeNoteBookUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3F33F2A42D6EF1770035506E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					3F33F2AB2D6EF1780035506E = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					3F33F2C92D6EF17A0035506E = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 3F33F2AB2D6EF1780035506E;
+					};
+					3F33F2D32D6EF17A0035506E = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 3F33F2AB2D6EF1780035506E;
+					};
+				};
+			};
+			buildConfigurationList = 3F33F2A72D6EF1770035506E /* Build configuration list for PBXProject "TraeNoteBook" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3F33F2A32D6EF1770035506E;
+			productRefGroup = 3F33F2AD2D6EF1780035506E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3F33F2AB2D6EF1780035506E /* TraeNoteBook */,
+				3F33F2C92D6EF17A0035506E /* TraeNoteBookTests */,
+				3F33F2D32D6EF17A0035506E /* TraeNoteBookUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3F33F2AA2D6EF1780035506E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3F33F2BF2D6EF1790035506E /* Assets.xcassets in Resources */,
+				3F33F2C22D6EF1790035506E /* Base in Resources */,
+				3F33F2BA2D6EF1780035506E /* Base in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3F33F2C82D6EF17A0035506E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3F33F2D22D6EF17A0035506E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		108A9F28885125A00679D047 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TraeNoteBook-TraeNoteBookUITests/Pods-TraeNoteBook-TraeNoteBookUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TraeNoteBook-TraeNoteBookUITests/Pods-TraeNoteBook-TraeNoteBookUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TraeNoteBook-TraeNoteBookUITests/Pods-TraeNoteBook-TraeNoteBookUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2504A9D778563BEF8AF96A1F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TraeNoteBook/Pods-TraeNoteBook-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TraeNoteBook/Pods-TraeNoteBook-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TraeNoteBook/Pods-TraeNoteBook-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		872B9FD575478C9DD2994AB8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TraeNoteBook-TraeNoteBookUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BDFA85508EF11954661958DD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TraeNoteBook-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F5549145C4648FA723878EFA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TraeNoteBookTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3F33F2A82D6EF1780035506E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3F33F30C2D6EF31A0035506E /* TraeNoteBook.xcdatamodeld in Sources */,
+				3F33F3112D6EF3740035506E /* Note+CoreDataClass.m in Sources */,
+				3F33F2C52D6EF1790035506E /* main.m in Sources */,
+				3F33F3182D6FFE200035506E /* VideoFeedCollectionViewCell.m in Sources */,
+				3F33F30E2D6EF31A0035506E /* NoteListViewController.m in Sources */,
+				3F33F30B2D6EF31A0035506E /* SceneDelegate.m in Sources */,
+				3F33F31B2D7002640035506E /* VideoFeedCacheManager.m in Sources */,
+				3F33F2B72D6EF1780035506E /* ViewController.m in Sources */,
+				3F33F3142D6EF93D0035506E /* VideoFeedViewController.m in Sources */,
+				3F33F2B12D6EF1780035506E /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3F33F2C62D6EF17A0035506E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3F33F2CF2D6EF17A0035506E /* TraeNoteBookTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3F33F2D02D6EF17A0035506E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3F33F2DB2D6EF17A0035506E /* TraeNoteBookUITestsLaunchTests.m in Sources */,
+				3F33F2D92D6EF17A0035506E /* TraeNoteBookUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3F33F2CC2D6EF17A0035506E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3F33F2AB2D6EF1780035506E /* TraeNoteBook */;
+			targetProxy = 3F33F2CB2D6EF17A0035506E /* PBXContainerItemProxy */;
+		};
+		3F33F2D62D6EF17A0035506E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3F33F2AB2D6EF1780035506E /* TraeNoteBook */;
+			targetProxy = 3F33F2D52D6EF17A0035506E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3F33F2B82D6EF1780035506E /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3F33F2B92D6EF1780035506E /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		3F33F2C02D6EF1790035506E /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3F33F2C12D6EF1790035506E /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3F33F2DC2D6EF17A0035506E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		3F33F2DD2D6EF17A0035506E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3F33F2DF2D6EF17A0035506E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 29A04BFC5D0686142D2C5506 /* Pods-TraeNoteBook.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GBL46J7TV8;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TraeNoteBook/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zcx.macApp.TraeNoteBook;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3F33F2E02D6EF17A0035506E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B751374D6E2490293A34952A /* Pods-TraeNoteBook.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GBL46J7TV8;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TraeNoteBook/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zcx.macApp.TraeNoteBook;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3F33F2E22D6EF17A0035506E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 81056A3AF21D93B7E8C9A077 /* Pods-TraeNoteBookTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zcx.macApp.TraeNoteBookTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TraeNoteBook.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TraeNoteBook";
+			};
+			name = Debug;
+		};
+		3F33F2E32D6EF17A0035506E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E31B6C8DEB7767D0C2E8B950 /* Pods-TraeNoteBookTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zcx.macApp.TraeNoteBookTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TraeNoteBook.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TraeNoteBook";
+			};
+			name = Release;
+		};
+		3F33F2E52D6EF17A0035506E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8FF28F69009B8781383ACAF7 /* Pods-TraeNoteBook-TraeNoteBookUITests.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zcx.macApp.TraeNoteBookUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TraeNoteBook;
+			};
+			name = Debug;
+		};
+		3F33F2E62D6EF17A0035506E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4E43B8BB6A7B1D62D63316FE /* Pods-TraeNoteBook-TraeNoteBookUITests.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zcx.macApp.TraeNoteBookUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TraeNoteBook;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3F33F2A72D6EF1770035506E /* Build configuration list for PBXProject "TraeNoteBook" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3F33F2DC2D6EF17A0035506E /* Debug */,
+				3F33F2DD2D6EF17A0035506E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3F33F2DE2D6EF17A0035506E /* Build configuration list for PBXNativeTarget "TraeNoteBook" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3F33F2DF2D6EF17A0035506E /* Debug */,
+				3F33F2E02D6EF17A0035506E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3F33F2E12D6EF17A0035506E /* Build configuration list for PBXNativeTarget "TraeNoteBookTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3F33F2E22D6EF17A0035506E /* Debug */,
+				3F33F2E32D6EF17A0035506E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3F33F2E42D6EF17A0035506E /* Build configuration list for PBXNativeTarget "TraeNoteBookUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3F33F2E52D6EF17A0035506E /* Debug */,
+				3F33F2E62D6EF17A0035506E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		3F33F3052D6EF3190035506E /* TraeNoteBook.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				3F33F3062D6EF3190035506E /* TraeNoteBook.xcdatamodel */,
+			);
+			currentVersion = 3F33F3062D6EF3190035506E /* TraeNoteBook.xcdatamodel */;
+			name = TraeNoteBook.xcdatamodeld;
+			path = /Users/chaoxinzhang/traeTest/TraeNoteBook/TraeNoteBook/TraeNoteBook.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 3F33F2A42D6EF1770035506E /* Project object */;
+}

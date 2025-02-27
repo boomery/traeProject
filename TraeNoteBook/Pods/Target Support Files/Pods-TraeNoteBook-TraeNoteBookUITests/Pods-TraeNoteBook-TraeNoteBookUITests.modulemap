@@ -1,0 +1,6 @@
+framework module Pods_TraeNoteBook_TraeNoteBookUITests {
+  umbrella header "Pods-TraeNoteBook-TraeNoteBookUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
