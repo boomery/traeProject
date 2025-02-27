@@ -12,6 +12,7 @@
 @property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic, strong) UIBarButtonItem *backButton;
 @property (nonatomic, strong) UIBarButtonItem *forwardButton;
+@property (nonatomic, strong) UIBarButtonItem *openVideoListButton;
 @property (nonatomic, strong) UIBarButtonItem *refreshButton;
 @property (nonatomic, strong) UITextField *urlTextField;
 
