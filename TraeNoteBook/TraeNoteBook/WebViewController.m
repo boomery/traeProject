@@ -41,27 +41,26 @@
     
     // 注入视频资源嗅探脚本
     NSString *videoDetectionScript = @"\
-        // 存储已检测到的视频URL\
+        console.log('视频检测脚本已注入');\
         let detectedUrls = new Set();\
         \
-        // 检查URL是否为视频资源\
         function isVideoUrl(url) {\
             const videoExtensions = ['.mp4', '.m3u8', '.ts', '.flv', '.f4v', '.mov', '.m4v', '.avi', '.mkv', '.wmv'];\
             return videoExtensions.some(ext => url.toLowerCase().includes(ext));\
         }\
         \
-        // 发送视频资源到原生代码\
         function postVideoResource(type, url) {\
             if (!detectedUrls.has(url) && isVideoUrl(url)) {\
+                console.log('检测到视频资源:', type, url);\
                 detectedUrls.add(url);\
-                window.webkit.messageHandlers.videoResource.postMessage([{\
-                    type: type,\
-                    url: url\
-                }]);\
-            }\
-        }\
+                window.webkit.messageHandlers.videoResource.postMessage([{
+                    type: type,
+                    url: url,
+                    title: document.title || '未知视频'
+                }]);
+            }
+        }
         \
-        // 拦截XMLHttpRequest\
         const originalXHR = window.XMLHttpRequest;\
         window.XMLHttpRequest = function() {\
             const xhr = new originalXHR();\
@@ -76,7 +75,6 @@
             return xhr;\
         };\
         \
-        // 拦截Fetch请求\
         const originalFetch = window.fetch;\
         window.fetch = function(input) {\
             const url = (input instanceof Request) ? input.url : input;\
@@ -86,14 +84,11 @@
             return originalFetch.apply(this, arguments);\
         };\
         \
-        // 检测视频资源\
         function detectVideoResources() {\
-            // 监听video标签\
             document.querySelectorAll('video').forEach(video => {\
                 if (video.src) {\
                     postVideoResource('video标签', video.src);\
                 }\
-                // 检查video的子source标签\
                 video.querySelectorAll('source').forEach(source => {\
                     if (source.src) {\
                         postVideoResource('source标签', source.src);\
@@ -101,14 +96,12 @@
                 });\
             });\
             \
-            // 监听独立的source标签\
             document.querySelectorAll('source[type^=\"video/\"]').forEach(source => {\
                 if (source.src) {\
                     postVideoResource('source标签', source.src);\
                 }\
             });\
             \
-            // 检查页面中的链接\
             document.querySelectorAll('a').forEach(link => {\
                 if (link.href && isVideoUrl(link.href)) {\
                     postVideoResource('链接', link.href);\
@@ -116,7 +109,6 @@
             });\
         }\
         \
-        // 监听DOM变化\
         const observer = new MutationObserver(() => {\
             detectVideoResources();\
         });\
@@ -126,7 +118,6 @@
             subtree: true\
         });\
         \
-        // 初始检测\
         detectVideoResources();\
     ";
     
@@ -342,7 +333,8 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"VideoResourceCell" forIndexPath:indexPath];
     
     NSDictionary *resource = self.videoResources[indexPath.row];
-    cell.textLabel.text = [NSString stringWithFormat:@"视频 %ld: %@", (long)indexPath.row + 1, resource[@"type"]];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@", resource[@"title"] ?: @"未知视频"];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"类型: %@", resource[@"type"]];
     cell.textLabel.font = [UIFont systemFontOfSize:14];
     
     // 添加下载按钮
@@ -376,7 +368,6 @@
 
 - (void)updateVideoResources:(NSArray *)resources {
     // 更新资源列表
-    [self.videoResources removeAllObjects];
     [self.videoResources addObjectsFromArray:resources];
     
     // 更新UI
