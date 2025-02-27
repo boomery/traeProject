@@ -6,14 +6,21 @@
 //
 
 #import "WebViewController.h"
-
-@interface WebViewController () <WKNavigationDelegate, WKUIDelegate, UITextFieldDelegate>
+#import "VideoDownloadManager.h"
+@interface WebViewController () <WKNavigationDelegate, WKUIDelegate, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic, strong) UIBarButtonItem *backButton;
 @property (nonatomic, strong) UIBarButtonItem *forwardButton;
 @property (nonatomic, strong) UIBarButtonItem *refreshButton;
 @property (nonatomic, strong) UITextField *urlTextField;
+
+// 视频资源嗅探相关属性
+@property (nonatomic, strong) NSMutableArray *videoResources;
+@property (nonatomic, strong) UIView *videoListPanel;
+@property (nonatomic, strong) UITableView *videoListTableView;
+@property (nonatomic, strong) UIButton *togglePanelButton;
+@property (nonatomic, assign) BOOL isPanelExpanded;
 
 @end
 
@@ -23,9 +30,111 @@
     [super viewDidLoad];
     self.extendedLayoutIncludesOpaqueBars = YES;
     self.edgesForExtendedLayout = UIRectEdgeNone;
-
+    
+    // 初始化视频资源数组
+    self.videoResources = [NSMutableArray array];
+    self.isPanelExpanded = NO;
+    
     // 配置WKWebView
     WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
+    [configuration.userContentController addScriptMessageHandler:self name:@"videoResource"];
+    
+    // 注入视频资源嗅探脚本
+    NSString *videoDetectionScript = @"\
+        // 存储已检测到的视频URL\
+        let detectedUrls = new Set();\
+        \
+        // 检查URL是否为视频资源\
+        function isVideoUrl(url) {\
+            const videoExtensions = ['.mp4', '.m3u8', '.ts', '.flv', '.f4v', '.mov', '.m4v', '.avi', '.mkv', '.wmv'];\
+            return videoExtensions.some(ext => url.toLowerCase().includes(ext));\
+        }\
+        \
+        // 发送视频资源到原生代码\
+        function postVideoResource(type, url) {\
+            if (!detectedUrls.has(url) && isVideoUrl(url)) {\
+                detectedUrls.add(url);\
+                window.webkit.messageHandlers.videoResource.postMessage([{\
+                    type: type,\
+                    url: url\
+                }]);\
+            }\
+        }\
+        \
+        // 拦截XMLHttpRequest\
+        const originalXHR = window.XMLHttpRequest;\
+        window.XMLHttpRequest = function() {\
+            const xhr = new originalXHR();\
+            const originalOpen = xhr.open;\
+            xhr.open = function() {\
+                const url = arguments[1];\
+                if (isVideoUrl(url)) {\
+                    postVideoResource('XHR请求', url);\
+                }\
+                return originalOpen.apply(this, arguments);\
+            };\
+            return xhr;\
+        };\
+        \
+        // 拦截Fetch请求\
+        const originalFetch = window.fetch;\
+        window.fetch = function(input) {\
+            const url = (input instanceof Request) ? input.url : input;\
+            if (isVideoUrl(url)) {\
+                postVideoResource('Fetch请求', url);\
+            }\
+            return originalFetch.apply(this, arguments);\
+        };\
+        \
+        // 检测视频资源\
+        function detectVideoResources() {\
+            // 监听video标签\
+            document.querySelectorAll('video').forEach(video => {\
+                if (video.src) {\
+                    postVideoResource('video标签', video.src);\
+                }\
+                // 检查video的子source标签\
+                video.querySelectorAll('source').forEach(source => {\
+                    if (source.src) {\
+                        postVideoResource('source标签', source.src);\
+                    }\
+                });\
+            });\
+            \
+            // 监听独立的source标签\
+            document.querySelectorAll('source[type^=\"video/\"]').forEach(source => {\
+                if (source.src) {\
+                    postVideoResource('source标签', source.src);\
+                }\
+            });\
+            \
+            // 检查页面中的链接\
+            document.querySelectorAll('a').forEach(link => {\
+                if (link.href && isVideoUrl(link.href)) {\
+                    postVideoResource('链接', link.href);\
+                }\
+            });\
+        }\
+        \
+        // 监听DOM变化\
+        const observer = new MutationObserver(() => {\
+            detectVideoResources();\
+        });\
+        \
+        observer.observe(document.body, {\
+            childList: true,\
+            subtree: true\
+        });\
+        \
+        // 初始检测\
+        detectVideoResources();\
+    ";
+    
+    WKUserScript *script = [[WKUserScript alloc] initWithSource:videoDetectionScript
+                                                  injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
+                                               forMainFrameOnly:NO];
+    [configuration.userContentController addUserScript:script];
+    
     self.webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 44, self.view.bounds.size.width, self.view.bounds.size.height - 44) configuration:configuration];
     self.webView.navigationDelegate = self;
     self.webView.UIDelegate = self;
@@ -56,9 +165,12 @@
     
     // 设置导航栏按钮
     [self setupNavigationItems];
-    
+  
     // 加载默认页面
     [self loadDefaultPage];
+    
+    // 初始化视频列表面板
+    [self setupVideoListPanel];
 }
 
 - (void)loadDefaultPage {
@@ -101,28 +213,36 @@
 - (void)setupNavigationItems {
     // 后退按钮
     self.backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"chevron.backward"]
-                                                      style:UIBarButtonItemStylePlain
-                                                     target:self
-                                                     action:@selector(goBack)];
+                                                       style:UIBarButtonItemStylePlain
+                                                      target:self
+                                                      action:@selector(goBack)];
     self.backButton.enabled = NO;
     
     // 前进按钮
     self.forwardButton = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"chevron.forward"]
-                                                         style:UIBarButtonItemStylePlain
-                                                        target:self
-                                                        action:@selector(goForward)];
+                                                          style:UIBarButtonItemStylePlain
+                                                         target:self
+                                                         action:@selector(goForward)];
     self.forwardButton.enabled = NO;
+    
+    
+    //打开嗅探资源列表按钮
+    UIBarButtonItem *openVideoListButton = [[UIBarButtonItem alloc] initWithTitle:@"列表"
+                                                                            style:UIBarButtonItemStylePlain
+                                                                            target:self
+                                                                            action:@selector(toggleVideoListPanel)];
+    
     
     // 刷新按钮
     self.refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
-                                                                      target:self
-                                                                      action:@selector(refresh)];
+                                                                       target:self
+                                                                       action:@selector(refresh)];
     
     // 设置工具栏
     UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-                                                                                  target:nil
-                                                                                  action:nil];
-    self.toolbarItems = @[self.backButton, flexibleSpace, self.forwardButton, flexibleSpace, self.refreshButton];
+                                                                                   target:nil
+                                                                                   action:nil];
+    self.toolbarItems = @[self.backButton, flexibleSpace, self.forwardButton, flexibleSpace, openVideoListButton, self.refreshButton];
     self.navigationController.toolbarHidden = NO;
 }
 
@@ -161,7 +281,113 @@
 
 #pragma mark - WKNavigationDelegate
 
+#pragma mark - Video List Panel
+
+- (void)setupVideoListPanel {
+    // 创建切换按钮
+    self.togglePanelButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.togglePanelButton setTitle:@"视频资源 (0)" forState:UIControlStateNormal];
+    self.togglePanelButton.frame = CGRectMake(0, self.view.bounds.size.height - 44, self.view.bounds.size.width, 44);
+    self.togglePanelButton.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
+    [self.togglePanelButton addTarget:self action:@selector(toggleVideoListPanel) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.togglePanelButton];
+    
+    // 创建视频列表面板
+    self.videoListPanel = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 300)];
+    self.videoListPanel.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:self.videoListPanel];
+    
+    // 创建视频列表
+    self.videoListTableView = [[UITableView alloc] initWithFrame:self.videoListPanel.bounds style:UITableViewStylePlain];
+    self.videoListTableView.delegate = self;
+    self.videoListTableView.dataSource = self;
+    [self.videoListTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"VideoResourceCell"];
+    [self.videoListPanel addSubview:self.videoListTableView];
+}
+
+- (void)toggleVideoListPanel {
+    self.isPanelExpanded = !self.isPanelExpanded;
+    
+    CGFloat panelHeight = 300;
+    CGFloat toggleButtonY = self.isPanelExpanded ? 
+        self.view.bounds.size.height - panelHeight - 44 : 
+        self.view.bounds.size.height - 44;
+    CGFloat panelY = self.isPanelExpanded ? 
+        self.view.bounds.size.height - panelHeight : 
+        self.view.bounds.size.height;
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        self.togglePanelButton.frame = CGRectMake(0, toggleButtonY, self.view.bounds.size.width, 44);
+        self.videoListPanel.frame = CGRectMake(0, panelY, self.view.bounds.size.width, panelHeight);
+    }];
+}
+
+#pragma mark - WKScriptMessageHandler
+
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+    if ([message.name isEqualToString:@"videoResource"]) {
+        NSArray *resources = message.body;
+        [self updateVideoResources:resources];
+    }
+}
+
+
+#pragma mark - UITableViewDataSource & UITableViewDelegate
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.videoResources.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"VideoResourceCell" forIndexPath:indexPath];
+    
+    NSDictionary *resource = self.videoResources[indexPath.row];
+    cell.textLabel.text = [NSString stringWithFormat:@"视频 %ld: %@", (long)indexPath.row + 1, resource[@"type"]];
+    cell.textLabel.font = [UIFont systemFontOfSize:14];
+    
+    // 添加下载按钮
+    UIButton *downloadButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [downloadButton setTitle:@"下载" forState:UIControlStateNormal];
+    downloadButton.frame = CGRectMake(0, 0, 60, 30);
+    downloadButton.tag = indexPath.row;
+    [downloadButton addTarget:self action:@selector(downloadVideo:) forControlEvents:UIControlEventTouchUpInside];
+    cell.accessoryView = downloadButton;
+    
+    return cell;
+}
+
+- (void)downloadVideo:(UIButton *)sender {
+    NSInteger index = sender.tag;
+    if (index < self.videoResources.count) {
+        NSDictionary *resource = self.videoResources[index];
+        NSString *url = resource[@"url"];
+        UITableViewCell *cell = [self.videoListTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+        UIButton *downloadButton = (UIButton *)cell.accessoryView;
+
+        // 使用VideoDownloadManager下载视频
+        [[VideoDownloadManager sharedManager] downloadAndSaveVideo:[NSURL URLWithString:url] fromButton:sender success:^{
+            [downloadButton setTitle:@"完成" forState:UIControlStateNormal];
+
+        } failure:^(NSError *error) {
+            [downloadButton setTitle:@"失败" forState:UIControlStateNormal];
+        }];
+    }
+}
+
+- (void)updateVideoResources:(NSArray *)resources {
+    // 更新资源列表
+    [self.videoResources removeAllObjects];
+    [self.videoResources addObjectsFromArray:resources];
+    
+    // 更新UI
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.togglePanelButton setTitle:[NSString stringWithFormat:@"视频资源 (%lu)", (unsigned long)self.videoResources.count] forState:UIControlStateNormal];
+        [self.videoListTableView reloadData];
+    });
+}
+
 - (void)dealloc {
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"videoResource"];
     [self.webView removeObserver:self forKeyPath:@"estimatedProgress"];
 }
 
