@@ -9,8 +9,9 @@
 #import "AppDelegate.h"
 #import "Note+CoreDataClass.h"
 #import <AVKit/AVKit.h>
+#import "VideoDownloadManager.h"
 
-@interface NoteListViewController ()
+@interface NoteListViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) NSManagedObjectContext *context;
 
@@ -116,6 +117,13 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+        if (cell.accessoryView == nil) {
+            UIButton *downloadButton = [UIButton buttonWithType:UIButtonTypeSystem];
+            [downloadButton setImage:[UIImage systemImageNamed:@"arrow.down.circle"] forState:UIControlStateNormal];
+            downloadButton.frame = CGRectMake(0, 0, 30, 30);
+            [downloadButton addTarget:self action:@selector(downloadButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            cell.accessoryView = downloadButton;
+        }
     }
     
     Note *note = self.notes[indexPath.row];
@@ -124,12 +132,53 @@
     if (note.isVideo) {
         cell.detailTextLabel.text = @"[视频]";
         cell.imageView.image = [UIImage systemImageNamed:@"play.circle.fill"];
+        cell.accessoryView.hidden = NO;
     } else {
         cell.detailTextLabel.text = note.content;
         cell.imageView.image = nil;
+        cell.accessoryView.hidden = YES;
     }
     
     return cell;
+}
+
+- (void)downloadButtonTapped:(UIButton *)button {
+        
+    UIView *buttonSuperview = button.superview;
+    while (buttonSuperview && ![buttonSuperview isKindOfClass:[UITableViewCell class]]) {
+        buttonSuperview = buttonSuperview.superview;
+    }
+    
+    if (!buttonSuperview) {
+        return;
+    }
+    
+    UITableViewCell *cell =  (UITableViewCell *)buttonSuperview;
+    
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    
+    if (!indexPath) return;
+    
+    Note *note = self.notes[indexPath.row];
+    if (!note.isVideo) return;
+    
+    NSURL *videoURL = [NSURL URLWithString:note.videoUrl];
+    
+    [[VideoDownloadManager sharedManager] downloadAndSaveVideo:videoURL
+                                                  fromButton:button
+                                                    success:^{
+        [self showAlert:@"保存成功" message:@"视频已保存到相册"];
+    } failure:^(NSError *error) {
+        [self showAlert:@"保存失败" message:error.localizedDescription];
+    }];
+}
+
+- (void)showAlert:(NSString *)title message:(NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                 message:message
+                                                          preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
