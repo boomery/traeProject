@@ -7,5 +7,6 @@
         <attribute name="title" optional="YES" attributeType="String"/>
         <attribute name="updateTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="videoUrl" optional="YES" attributeType="String"/>
+        <attribute name="thumbnailData" optional="YES" attributeType="Binary"/>
     </entity>
 </model>

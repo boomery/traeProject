@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSDate *updateTime;
 @property (nonatomic, assign) BOOL isVideo;
 @property (nonatomic, strong) NSString *videoUrl;
+@property (nonatomic, strong) NSData *thumbnailData;
 
 @end
 

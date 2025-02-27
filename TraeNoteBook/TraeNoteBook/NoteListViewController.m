@@ -38,8 +38,23 @@
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     self.context = appDelegate.persistentContainer.viewContext;
     
+    // 注册视频收藏成功的通知
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleVideoFavoriteSuccess:)
+                                                 name:@"VideoFavoriteSuccessNotification"
+                                               object:nil];
+    
     // 加载数据
     [self loadNotes];
+}
+
+// 处理视频收藏成功的通知
+- (void)handleVideoFavoriteSuccess:(NSNotification *)notification {
+    [self loadNotes];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - Data Operations
@@ -111,6 +126,11 @@
     return self.notes.count;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    Note *note = self.notes[indexPath.row];
+    return note.isVideo ? 100 : 60;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier = @"NoteCell";
     
@@ -129,13 +149,26 @@
     Note *note = self.notes[indexPath.row];
     cell.textLabel.text = note.title;
     
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    NSString *dateString = [formatter stringFromDate:note.createTime];
+    
     if (note.isVideo) {
-        cell.detailTextLabel.text = @"[视频]";
-        cell.imageView.image = [UIImage systemImageNamed:@"play.circle.fill"];
+        if (note.thumbnailData) {
+            UIImage *thumbnail = [UIImage imageWithData:note.thumbnailData];
+            UIImageView *thumbnailView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 10, 80, 80)];
+            thumbnailView.contentMode = UIViewContentModeScaleAspectFill;
+            thumbnailView.clipsToBounds = YES;
+            thumbnailView.image = thumbnail;
+            [cell.contentView addSubview:thumbnailView];
+            
+            cell.textLabel.frame = CGRectMake(105, 10, cell.contentView.bounds.size.width - 120, 20);
+            cell.detailTextLabel.frame = CGRectMake(105, 35, cell.contentView.bounds.size.width - 120, 20);
+        }
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"收藏时间：%@", dateString];
         cell.accessoryView.hidden = NO;
     } else {
         cell.detailTextLabel.text = note.content;
-        cell.imageView.image = nil;
         cell.accessoryView.hidden = YES;
     }
     

@@ -57,7 +57,7 @@
             return;
         }
         
-        UICollectionViewCell *cell = (UICollectionViewCell *)buttonSuperview;
+        VideoFeedCollectionViewCell *cell = (UICollectionViewCell *)buttonSuperview;
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
         
         if (!indexPath || indexPath.item >= self.videoFeeds.count) {
@@ -78,9 +78,27 @@
         note.isVideo = YES;
         note.videoUrl = videoInfo[@"url"];
         
+        // 获取当前播放视频的截图
+        if (cell.player) {
+            AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:cell.player.currentItem.asset];
+            imageGenerator.appliesPreferredTrackTransform = YES;
+            CMTime time = cell.player.currentTime;
+            NSError *error = nil;
+            CMTime actualTime;
+            CGImageRef image = [imageGenerator copyCGImageAtTime:time actualTime:&actualTime error:&error];
+            if (image) {
+                UIImage *thumbnail = [UIImage imageWithCGImage:image];
+                CGImageRelease(image);
+                note.thumbnailData = UIImageJPEGRepresentation(thumbnail, 0.8);
+            }
+        }
+        
         // 保存到CoreData
         NSError *error = nil;
         if ([self.context save:&error]) {
+            // 发送视频收藏成功的通知
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"VideoFavoriteSuccessNotification" object:nil];
+            
             // 显示保存成功提示
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示"
                                                                          message:@"视频收藏成功"
