@@ -11,7 +11,7 @@
 #import "AppDelegate.h"
 #import "Note+CoreDataClass.h"
 #import "VideoFeedCollectionViewCell.h"
-
+#import <Photos/Photos.h>
 @interface VideoFeedViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -257,8 +257,8 @@
                 if (videoUrl) {
                     NSDictionary *videoInfo = @{
                         @"title": @"短视频",
-                        @"url": videoUrl,
-//                        @"url":@"https://media.w3.org/2010/05/sintel/trailer.mp4",
+//                        @"url": videoUrl,
+                        @"url":@"https://media.w3.org/2010/05/sintel/trailer.mp4",
                         @"cover": @""
                     };
                     
@@ -368,6 +368,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     VideoFeedCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"VideoCell" forIndexPath:indexPath];
     [cell.favoriteButton addTarget:self action:@selector(favoriteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.saveToAlbumButton addTarget:self action:@selector(saveVideoToAlbum:) forControlEvents:UIControlEventTouchUpInside];
     return cell;
 }
 
@@ -401,6 +402,106 @@
             }];
         }
     }
+}
+
+- (void)saveVideoToAlbum:(UIButton *)button {
+    // 获取对应的视频信息
+    UIView *buttonSuperview = button.superview;
+    while (buttonSuperview && ![buttonSuperview isKindOfClass:[UICollectionViewCell class]]) {
+        buttonSuperview = buttonSuperview.superview;
+    }
+    
+    if (!buttonSuperview) {
+        return;
+    }
+    
+    UICollectionViewCell *cell = (UICollectionViewCell *)buttonSuperview;
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    
+    if (!indexPath || indexPath.item >= self.videoFeeds.count) {
+        return;
+    }
+    
+    NSDictionary *videoInfo = self.videoFeeds[indexPath.item];
+    NSURL *videoURL = [NSURL URLWithString:videoInfo[@"url"]];
+    
+    // 检查相册权限
+    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (status == PHAuthorizationStatusAuthorized) {
+                // 显示下载进度
+                UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+                indicator.center = button.center;
+                [button.superview addSubview:indicator];
+                [indicator startAnimating];
+                button.hidden = YES;
+                
+                // 下载视频
+                NSURLSession *session = [NSURLSession sharedSession];
+                NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithURL:videoURL completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
+                    if (error) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self showAlert:@"下载失败" message:error.localizedDescription];
+                            [indicator removeFromSuperview];
+                            button.hidden = NO;
+                        });
+                        return;
+                    }
+                    
+                    // 创建临时文件路径
+                    NSString *tmpDirPath = NSTemporaryDirectory();
+                    NSString *tmpFilePath = [tmpDirPath stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
+                    tmpFilePath = [tmpFilePath stringByAppendingPathExtension:@"mp4"];
+                    NSURL *tmpFileURL = [NSURL fileURLWithPath:tmpFilePath];
+                    
+                    // 将下载的文件移动到临时目录
+                    NSError *moveError;
+                    [[NSFileManager defaultManager] moveItemAtURL:location toURL:tmpFileURL error:&moveError];
+                    
+                    if (moveError) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self showAlert:@"保存失败" message:@"无法移动临时文件"];
+                            [indicator removeFromSuperview];
+                            button.hidden = NO;
+                        });
+                        return;
+                    }
+                    
+                    // 保存到相册
+                    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+                        PHAssetCreationRequest *request = [PHAssetCreationRequest creationRequestForAsset];
+                        [request addResourceWithType:PHAssetResourceTypeVideo fileURL:tmpFileURL options:nil];
+                        request.creationDate = [NSDate date]; // 设置为保存时的时间
+                    } completionHandler:^(BOOL success, NSError *error) {
+                        // 清理临时文件
+                        [[NSFileManager defaultManager] removeItemAtURL:tmpFileURL error:nil];
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [indicator removeFromSuperview];
+                            button.hidden = NO;
+                            
+                            if (success) {
+                                [self showAlert:@"保存成功" message:@"视频已保存到相册"];
+                            } else {
+                                [self showAlert:@"保存失败" message:error.localizedDescription];
+                            }
+                        });
+                    }];
+                }];
+                [downloadTask resume];
+            } else {
+                [self showAlert:@"无法访问相册" message:@"请在设置中允许访问相册"];
+            }
+        });
+    }];
+}
+
+- (void)showAlert:(NSString *)title message:(NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                 message:message
+                                                          preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 @end

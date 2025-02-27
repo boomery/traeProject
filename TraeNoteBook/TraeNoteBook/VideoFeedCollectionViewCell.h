@@ -10,6 +10,7 @@
 @interface VideoFeedCollectionViewCell : UICollectionViewCell
 
 @property (nonatomic, strong) UIButton *favoriteButton;
+@property (nonatomic, strong) UIButton *saveToAlbumButton; // 新增
 @property (nonatomic, strong) UIActivityIndicatorView *loadingIndicator;
 @property (nonatomic, strong) UIImageView *thumbnailImageView;
 @property (nonatomic, strong) AVPlayer *player;

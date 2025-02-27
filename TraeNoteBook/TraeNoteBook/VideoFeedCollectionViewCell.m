@@ -44,6 +44,12 @@
     
     // 设置随机背景色
     [self updateRandomBackgroundColor];
+    
+    // 添加保存到相册按钮
+    self.saveToAlbumButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.saveToAlbumButton setImage:[UIImage systemImageNamed:@"square.and.arrow.down"] forState:UIControlStateNormal];
+    [self.saveToAlbumButton setTintColor:[UIColor whiteColor]];
+    [self.contentView addSubview:self.saveToAlbumButton];
 }
 
 - (void)updateRandomBackgroundColor {
@@ -66,6 +72,8 @@
     
     // 更新子视图的frame
     self.favoriteButton.frame = CGRectMake(self.contentView.bounds.size.width - 50, 50, 30, 30);
+    // 保存按钮位于收藏按钮下方
+    self.saveToAlbumButton.frame = CGRectMake(self.contentView.bounds.size.width - 50, 90, 30, 30);
     self.loadingIndicator.center = self.contentView.center;
     self.thumbnailImageView.frame = self.contentView.bounds;
 }
