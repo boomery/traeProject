@@ -21,6 +21,7 @@
 @property (nonatomic, strong) UIBarButtonItem *forwardButton;
 @property (nonatomic, strong) UIBarButtonItem *historyButton;
 @property (nonatomic, strong) UIBarButtonItem *openVideoListButton;
+@property (nonatomic, strong) UIBarButtonItem *favoriteButton;
 @property (nonatomic, strong) UIBarButtonItem *refreshButton;
 @property (nonatomic, strong) UITextField *urlTextField;
 
@@ -229,6 +230,7 @@
     [self saveBrowsingHistory];
 }
 
+// 在 setupNavigationItems 方法中添加
 - (void)setupNavigationItems {
     // 后退按钮
     self.backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"chevron.backward"]
@@ -250,6 +252,12 @@
                                                          target:self
                                                          action:@selector(goHistory)];
     
+    //收藏按钮
+    self.favoriteButton = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"star"]
+                                                           style:UIBarButtonItemStylePlain
+                                                          target:self
+                                                          action:@selector(favoriteWeb)];
+    
     //打开嗅探资源列表按钮
     self.openVideoListButton = [[UIBarButtonItem alloc] initWithTitle:@"列表 (0)"
                                                                 style:UIBarButtonItemStylePlain
@@ -266,7 +274,7 @@
     UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
                                                                                    target:nil
                                                                                    action:nil];
-    self.toolbarItems = @[self.historyButton,self.backButton, flexibleSpace, self.forwardButton,  flexibleSpace, self.openVideoListButton, self.refreshButton];
+    self.toolbarItems = @[self.historyButton,self.favoriteButton,self.backButton, flexibleSpace, self.forwardButton,  flexibleSpace, self.openVideoListButton, self.refreshButton];
     self.navigationController.toolbarHidden = NO;
 }
 
@@ -282,6 +290,40 @@
         }
     };
     [self.navigationController pushViewController:historyVC animated:YES];
+}
+
+- (void)favoriteWeb {
+    // 获取当前网页的截图
+    UIGraphicsBeginImageContextWithOptions(self.webView.bounds.size, YES, 0.0);
+    [self.webView drawViewHierarchyInRect:self.webView.bounds afterScreenUpdates:YES];
+    UIImage *screenshot = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    // 将截图缩放为缩略图
+    CGSize thumbnailSize = CGSizeMake(300, 200);
+    UIGraphicsBeginImageContextWithOptions(thumbnailSize, YES, 0.0);
+    [screenshot drawInRect:CGRectMake(0, 0, thumbnailSize.width, thumbnailSize.height)];
+    UIImage *thumbnail = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    // 创建新的笔记
+    Note *note = [NSEntityDescription insertNewObjectForEntityForName:@"Note" inManagedObjectContext:self.context];
+    note.title = self.webView.title;
+    note.content = self.webView.URL.absoluteString;
+    note.createTime = [NSDate date];
+    note.updateTime = [NSDate date];
+    note.thumbnailData = UIImageJPEGRepresentation(thumbnail, 0.8);
+    
+    // 保存到CoreData
+    NSError *error = nil;
+    if ([self.context save:&error]) {
+        [SVProgressHUD showSuccessWithStatus:@"收藏成功"];
+        // 发送通知更新笔记列表
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"VideoFavoriteSuccessNotification" object:nil];
+    } else {
+        [SVProgressHUD showErrorWithStatus:@"收藏失败"];
+        NSLog(@"保存笔记失败: %@", error);
+    }
 }
 
 - (void)saveBrowsingHistory {

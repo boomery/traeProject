@@ -14,6 +14,7 @@
 #import "NoteTableViewCell.h"
 #import <Photos/Photos.h>
 #import "SVProgressHUD.h"
+#import "WebViewController.h"
 @interface NoteListViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) NSManagedObjectContext *context;
@@ -246,7 +247,7 @@
     Note *note = self.notes[indexPath.row];
     
     if (note.isVideo) {
-        // 创建视频播放器
+        // 视频播放逻辑保持不变
         AVPlayer *player = [AVPlayer playerWithURL:[NSURL URLWithString:note.videoUrl]];
         AVPlayerViewController *playerViewController = [[AVPlayerViewController alloc] init];
         playerViewController.player = player;
@@ -257,9 +258,22 @@
         return;
     }
     
+    // 检查是否是网页链接
+    if ([note.content hasPrefix:@"http://"] || [note.content hasPrefix:@"https://"]) {
+        WebViewController *webVC = [[WebViewController alloc] init];
+        webVC.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:webVC animated:YES];
+        
+        // 加载URL
+        NSURL *url = [NSURL URLWithString:note.content];
+        [webVC.webView loadRequest:[NSURLRequest requestWithURL:url]];
+        return;
+    }
+    
+    // 普通笔记的编辑逻辑保持不变
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"编辑笔记"
-                                                                   message:nil
-                                                            preferredStyle:UIAlertControllerStyleAlert];
+                                                                 message:nil
+                                                          preferredStyle:UIAlertControllerStyleAlert];
     
     [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
         textField.placeholder = @"标题";
