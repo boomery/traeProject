@@ -93,17 +93,17 @@
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
-                                                          style:UIAlertActionStyleCancel
-                                                        handler:nil];
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
     
     UIAlertAction *saveAction = [UIAlertAction actionWithTitle:@"保存"
-                                                        style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction *action) {
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction *action) {
         NSString *title = alert.textFields[0].text;
         NSString *content = alert.textFields[1].text;
         
         Note *note = [NSEntityDescription insertNewObjectForEntityForName:@"Note"
-                                                 inManagedObjectContext:self.context];
+                                                   inManagedObjectContext:self.context];
         note.title = title;
         note.content = content;
         note.createTime = [NSDate date];
@@ -131,7 +131,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     Note *note = self.notes[indexPath.row];
-    return note.isVideo ? 100 : 60;
+    return 100;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -147,16 +147,17 @@
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-    NSString *dateString = [formatter stringFromDate:note.createTime];
+    NSString *createTimeString = [formatter stringFromDate:note.createTime];
+    NSString *updateTimeString = [formatter stringFromDate:note.updateTime];
     
-    NSString *detailText = note.isVideo ? 
-        [NSString stringWithFormat:@"收藏时间：%@", dateString] : 
-        note.content;
+    NSString *detailText = note.isVideo ?
+    [NSString stringWithFormat:@"收藏时间：%@", createTimeString] :
+    [NSString stringWithFormat:@"%@\n创建时间：%@\n最后修改：%@", note.content, createTimeString, updateTimeString];
     
     [cell configureWithTitle:note.title
-                     detail:detailText
+                      detail:detailText
                thumbnailData:note.thumbnailData
-                    isVideo:note.isVideo];
+                     isVideo:note.isVideo];
     
     return cell;
 }
@@ -271,12 +272,12 @@
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
-                                                          style:UIAlertActionStyleCancel
-                                                        handler:nil];
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
     
     UIAlertAction *saveAction = [UIAlertAction actionWithTitle:@"保存"
-                                                        style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction *action) {
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction *action) {
         note.title = alert.textFields[0].text;
         note.content = alert.textFields[1].text;
         note.updateTime = [NSDate date];
