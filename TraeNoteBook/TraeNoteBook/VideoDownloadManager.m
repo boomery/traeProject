@@ -5,6 +5,7 @@
 @interface VideoDownloadManager ()
 @property (nonatomic, strong) NSURLSession *session;
 @property (nonatomic, strong) NSMutableArray<NSURLSessionDownloadTask *> *downloadTasks;
+@property (nonatomic, strong) NSMutableDictionary *downloadStatusDict;
 @end
 
 @implementation VideoDownloadManager
@@ -24,14 +25,28 @@
         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
         _session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:[NSOperationQueue mainQueue]];
         _downloadTasks = [NSMutableArray array];
+        _downloadStatusDict = [NSMutableDictionary dictionary];
     }
     return self;
+}
+
+- (NSString *)statusForURL:(NSString *)urlString {
+    return self.downloadStatusDict[urlString] ?: @"";
+}
+
+- (float)progressForURL:(NSString *)urlString {
+    NSNumber *progress = self.downloadStatusDict[[NSString stringWithFormat:@"%@_progress", urlString]];
+    return progress ? [progress floatValue] : 0.0;
 }
 
 - (void)downloadAndSaveVideo:(NSURL *)videoURL
                   fromButton:(UIButton *)button
                     success:(void(^)(void))successBlock
                     failure:(void(^)(NSError *error))failureBlock {
+    // 设置初始下载状态
+    NSString *urlString = videoURL.absoluteString;
+    self.downloadStatusDict[urlString] = @"downloading";
+    self.downloadStatusDict[[NSString stringWithFormat:@"%@_progress", urlString]] = @0.0;
     // 检查相册权限
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -87,6 +102,27 @@
     }];
 }
 
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
+    if (error) {
+        NSString *urlString = task.originalRequest.URL.absoluteString;
+        self.downloadStatusDict[urlString] = @"failed";
+        
+        void(^failureBlock)(NSError *) = objc_getAssociatedObject(task, "failureBlock");
+        if (failureBlock) {
+            failureBlock(error);
+        }
+        
+        UIView *progressView = objc_getAssociatedObject(task, "progressView");
+        UIButton *button = objc_getAssociatedObject(task, "saveButton");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [progressView removeFromSuperview];
+            button.hidden = NO;
+        });
+        
+        [self.downloadTasks removeObject:(NSURLSessionDownloadTask *)task];
+    }
+}
+
 - (void)cancelAllDownloads {
     for (NSURLSessionDownloadTask *task in self.downloadTasks) {
         [task cancel];
@@ -97,6 +133,9 @@
 #pragma mark - NSURLSessionDownloadDelegate
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location {
+    // 获取下载URL并更新状态
+    NSString *urlString = downloadTask.originalRequest.URL.absoluteString;
+    self.downloadStatusDict[urlString] = @"completed";
     UIView *progressView = objc_getAssociatedObject(downloadTask, "progressView");
     UIButton *button = objc_getAssociatedObject(downloadTask, "saveButton");
     void(^successBlock)(void) = objc_getAssociatedObject(downloadTask, "successBlock");
@@ -152,13 +191,23 @@
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+    NSString *urlString = downloadTask.originalRequest.URL.absoluteString;
     float progress = (float)totalBytesWritten / (float)totalBytesExpectedToWrite;
+    self.downloadStatusDict[[NSString stringWithFormat:@"%@_progress", urlString]] = @(progress);
     
     UIView *progressView = objc_getAssociatedObject(downloadTask, "progressView");
     if (progressView) {
         CAShapeLayer *progressLayer = (CAShapeLayer *)progressView.layer.sublayers.lastObject;
         progressLayer.strokeEnd = progress;
     }
+    
+    // 发送下载进度更新通知
+    NSDictionary *userInfo = @{
+        @"url": urlString,
+        @"progress": @(progress),
+        @"status": @"downloading"
+    };
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"VideoDownloadProgressUpdated" object:nil userInfo:userInfo];
 }
 
 @end

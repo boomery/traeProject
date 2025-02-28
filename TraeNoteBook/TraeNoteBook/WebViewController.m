@@ -10,6 +10,8 @@
 #import "Note+CoreDataClass.h"
 #import "AppDelegate.h"
 #import "SVProgressHUD.h"
+#import "VideoResourceTableViewCell.h"
+
 @interface WebViewController () <WKNavigationDelegate, WKUIDelegate, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UIProgressView *progressView;
@@ -30,8 +32,19 @@
 
 @implementation WebViewController
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self]; [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"videoResource"];
+    [self.webView removeObserver:self forKeyPath:@"estimatedProgress"];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // 添加下载进度更新通知监听
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleDownloadProgressUpdate:)
+                                                 name:@"VideoDownloadProgressUpdated"
+                                               object:nil];
+
     self.extendedLayoutIncludesOpaqueBars = YES;
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
@@ -300,7 +313,7 @@
     self.videoListTableView = [[UITableView alloc] initWithFrame:self.videoListPanel.bounds style:UITableViewStylePlain];
     self.videoListTableView.delegate = self;
     self.videoListTableView.dataSource = self;
-    [self.videoListTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"VideoResourceCell"];
+    [self.videoListTableView registerClass:[VideoResourceTableViewCell class] forCellReuseIdentifier:@"VideoResourceCell"];
     [self.videoListPanel addSubview:self.videoListTableView];
 }
 
@@ -338,33 +351,24 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"VideoResourceCell" forIndexPath:indexPath];
+    VideoResourceTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"VideoResourceCell" forIndexPath:indexPath];
     
     NSDictionary *resource = self.videoResources[indexPath.row];
-    cell.textLabel.text = [NSString stringWithFormat:@"%@", resource[@"title"] ?: @"未知视频"];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"类型: %@", resource[@"type"]];
-    cell.textLabel.font = [UIFont systemFontOfSize:14];
+    NSString *urlString = resource[@"url"];
+    NSString *status = [[VideoDownloadManager sharedManager] statusForURL:urlString];
+    float progress = [[VideoDownloadManager sharedManager] progressForURL:urlString];
     
-    // 创建下载和收藏按钮的容器视图
-    UIView *accessoryView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 120, 30)];
+    [cell configureWithTitle:resource[@"title"]
+                       type:resource[@"type"]
+                        url:urlString
+                     status:status
+                   progress:progress];
     
-    // 添加下载按钮
-    UIButton *downloadButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [downloadButton setTitle:@"下载" forState:UIControlStateNormal];
-    downloadButton.frame = CGRectMake(0, 0, 60, 30);
-    downloadButton.tag = indexPath.row;
-    [downloadButton addTarget:self action:@selector(downloadVideo:) forControlEvents:UIControlEventTouchUpInside];
-    [accessoryView addSubview:downloadButton];
+    [cell.downloadButton addTarget:self action:@selector(downloadVideo:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.favoriteButton addTarget:self action:@selector(favoriteVideo:) forControlEvents:UIControlEventTouchUpInside];
     
-    // 添加收藏按钮
-    UIButton *favoriteButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [favoriteButton setTitle:@"收藏" forState:UIControlStateNormal];
-    favoriteButton.frame = CGRectMake(60, 0, 60, 30);
-    favoriteButton.tag = indexPath.row;
-    [favoriteButton addTarget:self action:@selector(favoriteVideo:) forControlEvents:UIControlEventTouchUpInside];
-    [accessoryView addSubview:favoriteButton];
-    
-    cell.accessoryView = accessoryView;
+    cell.downloadButton.tag = indexPath.row;
+    cell.favoriteButton.tag = indexPath.row;
     
     return cell;
 }
@@ -407,6 +411,31 @@
     }
 }
 
+- (void)handleDownloadProgressUpdate:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    NSString *url = userInfo[@"url"];
+    float progress = [userInfo[@"progress"] floatValue];
+    NSString *status = userInfo[@"status"];
+    
+    // 查找对应的资源和cell
+    for (NSInteger i = 0; i < self.videoResources.count; i++) {
+        NSDictionary *resource = self.videoResources[i];
+        if ([resource[@"url"] isEqualToString:url]) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+            VideoResourceTableViewCell *cell = [self.videoListTableView cellForRowAtIndexPath:indexPath];
+            if (cell) {
+                UIButton *downloadButton = cell.downloadButton;
+                
+                if ([status isEqualToString:@"downloading"]) {
+                    // 更新下载进度
+                    [downloadButton setTitle:[NSString stringWithFormat:@"%.0f%%", progress * 100] forState:UIControlStateNormal];
+                }
+            }
+            break;
+        }
+    }
+}
+
 - (void)downloadVideo:(UIButton *)sender {
     NSInteger index = sender.tag;
     if (index < self.videoResources.count) {
@@ -438,9 +467,5 @@
     });
 }
 
-- (void)dealloc {
-    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"videoResource"];
-    [self.webView removeObserver:self forKeyPath:@"estimatedProgress"];
-}
 
 @end

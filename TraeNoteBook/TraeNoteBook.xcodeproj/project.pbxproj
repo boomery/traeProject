@@ -28,6 +28,7 @@
 		3F33F3232D703D050035506E /* VideoDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3212D703D050035506E /* VideoDownloadManager.m */; };
 		3F33F3262D7042100035506E /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3242D7042100035506E /* WebViewController.m */; };
 		3F33F3292D7150280035506E /* NoteTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3282D7150280035506E /* NoteTableViewCell.m */; };
+		3F33F32C2D715AF30035506E /* VideoResourceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F32A2D715AF30035506E /* VideoResourceTableViewCell.m */; };
 		80A3241BC093978B47A74F70 /* Pods_TraeNoteBookTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 826F268F058E132E14C0066B /* Pods_TraeNoteBookTests.framework */; };
 		EFBC7C83CAC745496B0D19B6 /* Pods_TraeNoteBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C88FC051CA59615FC7EF25A /* Pods_TraeNoteBook.framework */; };
 /* End PBXBuildFile section */
@@ -88,6 +89,8 @@
 		3F33F3252D7042100035506E /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		3F33F3272D7150280035506E /* NoteTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteTableViewCell.h; sourceTree = "<group>"; };
 		3F33F3282D7150280035506E /* NoteTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoteTableViewCell.m; sourceTree = "<group>"; };
+		3F33F32A2D715AF30035506E /* VideoResourceTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoResourceTableViewCell.m; sourceTree = "<group>"; };
+		3F33F32B2D715AF30035506E /* VideoResourceTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoResourceTableViewCell.h; sourceTree = "<group>"; };
 		4E43B8BB6A7B1D62D63316FE /* Pods-TraeNoteBook-TraeNoteBookUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TraeNoteBook-TraeNoteBookUITests.release.xcconfig"; path = "Target Support Files/Pods-TraeNoteBook-TraeNoteBookUITests/Pods-TraeNoteBook-TraeNoteBookUITests.release.xcconfig"; sourceTree = "<group>"; };
 		81056A3AF21D93B7E8C9A077 /* Pods-TraeNoteBookTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TraeNoteBookTests.debug.xcconfig"; path = "Target Support Files/Pods-TraeNoteBookTests/Pods-TraeNoteBookTests.debug.xcconfig"; sourceTree = "<group>"; };
 		826F268F058E132E14C0066B /* Pods_TraeNoteBookTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TraeNoteBookTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -167,6 +170,8 @@
 				3F33F3122D6EF93D0035506E /* VideoFeedViewController.m */,
 				3F33F3252D7042100035506E /* WebViewController.h */,
 				3F33F3242D7042100035506E /* WebViewController.m */,
+				3F33F32B2D715AF30035506E /* VideoResourceTableViewCell.h */,
+				3F33F32A2D715AF30035506E /* VideoResourceTableViewCell.m */,
 				3F33F3222D703D050035506E /* VideoDownloadManager.h */,
 				3F33F3212D703D050035506E /* VideoDownloadManager.m */,
 				3F33F3172D6FFE200035506E /* VideoFeedCollectionViewCell.h */,
@@ -468,6 +473,7 @@
 				3F33F31E2D700EAF0035506E /* TraeNoteBook.xcdatamodeld in Sources */,
 				3F33F30E2D6EF31A0035506E /* NoteListViewController.m in Sources */,
 				3F33F30B2D6EF31A0035506E /* SceneDelegate.m in Sources */,
+				3F33F32C2D715AF30035506E /* VideoResourceTableViewCell.m in Sources */,
 				3F33F31B2D7002640035506E /* VideoFeedCacheManager.m in Sources */,
 				3F33F3262D7042100035506E /* WebViewController.m in Sources */,
 				3F33F2B72D6EF1780035506E /* ViewController.m in Sources */,

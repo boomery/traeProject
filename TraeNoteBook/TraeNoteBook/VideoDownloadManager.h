@@ -1,17 +1,20 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface VideoDownloadManager : NSObject <NSURLSessionDownloadDelegate>
+@interface VideoDownloadManager : NSObject
 
 + (instancetype)sharedManager;
 
-// 下载并保存视频到相册
-- (void)downloadAndSaveVideo:(NSURL *)videoURL
-                  fromButton:(UIButton *)button
-                    success:(void(^)(void))successBlock
-                    failure:(void(^)(NSError *error))failureBlock;
+// 下载状态字典
+@property (nonatomic, strong, readonly) NSMutableDictionary *downloadStatusDict;
 
-// 取消所有下载任务
-- (void)cancelAllDownloads;
+// 下载并保存视频
+- (void)downloadAndSaveVideo:(NSURL *)url fromButton:(UIButton *)button success:(void(^)(void))success failure:(void(^)(NSError *error))failure;
+
+// 获取下载进度
+- (float)progressForURL:(NSString *)urlString;
+
+// 获取下载状态
+- (NSString *)statusForURL:(NSString *)urlString;
 
 @end
