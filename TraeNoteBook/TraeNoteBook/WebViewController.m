@@ -349,8 +349,6 @@
     VideoResourceTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"VideoResourceCell" forIndexPath:indexPath];
     
     NSDictionary *resource = self.videoResources[indexPath.row];
-    NSString *urlString = resource[@"url"];
-    
     [cell configureWithTitle:resource[@"title"]
                        type:resource[@"type"]];
     
@@ -361,6 +359,10 @@
     cell.favoriteButton.tag = indexPath.row;
     
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 80;
 }
 
 // 收藏视频到记事本
