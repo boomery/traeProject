@@ -207,7 +207,6 @@
         @"progress": @(progress),
         @"status": @"downloading"
     };
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"VideoDownloadProgressUpdated" object:nil userInfo:userInfo];
 }
 
 @end

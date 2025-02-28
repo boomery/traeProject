@@ -69,29 +69,9 @@
 }
 
 - (void)configureWithTitle:(NSString *)title
-                     type:(NSString *)type
-                      url:(NSString *)url
-                   status:(NSString *)status
-                 progress:(float)progress {
+                     type:(NSString *)type{
     self.titleLabel.text = title ?: @"未知视频";
     self.typeLabel.text = [NSString stringWithFormat:@"类型: %@", type];
-    
-    // 根据下载状态更新下载按钮
-    if ([status isEqualToString:@"downloading"]) {
-        [self.downloadButton setTitle:[NSString stringWithFormat:@"%.0f%%", progress * 100] forState:UIControlStateNormal];
-        self.downloadButton.enabled = NO;
-    } else if ([status isEqualToString:@"completed"]) {
-        [self.downloadButton setTitle:@"完成" forState:UIControlStateNormal];
-        self.downloadButton.enabled = NO;
-    } else if ([status isEqualToString:@"failed"]) {
-        [self.downloadButton setTitle:@"失败" forState:UIControlStateNormal];
-        self.downloadButton.enabled = YES;
-    } else {
-        [self.downloadButton setTitle:@"下载" forState:UIControlStateNormal];
-        self.downloadButton.enabled = YES;
-    }
-    
-    [self setNeedsLayout];
 }
 
 @end

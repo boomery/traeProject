@@ -15,9 +15,6 @@
 @property (nonatomic, strong) UIButton *favoriteButton;
 
 - (void)configureWithTitle:(NSString *)title
-                     type:(NSString *)type
-                      url:(NSString *)url
-                   status:(NSString *)status
-                 progress:(float)progress;
+                     type:(NSString *)type;
 
 @end

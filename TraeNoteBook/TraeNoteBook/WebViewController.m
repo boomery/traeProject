@@ -6,11 +6,12 @@
 //
 
 #import "WebViewController.h"
-#import "VideoDownloadManager.h"
 #import "Note+CoreDataClass.h"
 #import "AppDelegate.h"
 #import "SVProgressHUD.h"
 #import "VideoResourceTableViewCell.h"
+#import "DownloadItem.h"
+#import "DownloadManager.h"
 
 @interface WebViewController () <WKNavigationDelegate, WKUIDelegate, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -33,17 +34,11 @@
 @implementation WebViewController
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self]; [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"videoResource"];
     [self.webView removeObserver:self forKeyPath:@"estimatedProgress"];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // 添加下载进度更新通知监听
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleDownloadProgressUpdate:)
-                                                 name:@"VideoDownloadProgressUpdated"
-                                               object:nil];
 
     self.extendedLayoutIncludesOpaqueBars = YES;
     self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -355,14 +350,9 @@
     
     NSDictionary *resource = self.videoResources[indexPath.row];
     NSString *urlString = resource[@"url"];
-    NSString *status = [[VideoDownloadManager sharedManager] statusForURL:urlString];
-    float progress = [[VideoDownloadManager sharedManager] progressForURL:urlString];
     
     [cell configureWithTitle:resource[@"title"]
-                       type:resource[@"type"]
-                        url:urlString
-                     status:status
-                   progress:progress];
+                       type:resource[@"type"]];
     
     [cell.downloadButton addTarget:self action:@selector(downloadVideo:) forControlEvents:UIControlEventTouchUpInside];
     [cell.favoriteButton addTarget:self action:@selector(favoriteVideo:) forControlEvents:UIControlEventTouchUpInside];
@@ -411,48 +401,63 @@
     }
 }
 
-- (void)handleDownloadProgressUpdate:(NSNotification *)notification {
-    NSDictionary *userInfo = notification.userInfo;
-    NSString *url = userInfo[@"url"];
-    float progress = [userInfo[@"progress"] floatValue];
-    NSString *status = userInfo[@"status"];
-    
-    // 查找对应的资源和cell
-    for (NSInteger i = 0; i < self.videoResources.count; i++) {
-        NSDictionary *resource = self.videoResources[i];
-        if ([resource[@"url"] isEqualToString:url]) {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-            VideoResourceTableViewCell *cell = [self.videoListTableView cellForRowAtIndexPath:indexPath];
-            if (cell) {
-                UIButton *downloadButton = cell.downloadButton;
-                
-                if ([status isEqualToString:@"downloading"]) {
-                    // 更新下载进度
-                    [downloadButton setTitle:[NSString stringWithFormat:@"%.0f%%", progress * 100] forState:UIControlStateNormal];
-                }
-            }
-            break;
-        }
-    }
-}
-
 - (void)downloadVideo:(UIButton *)sender {
     NSInteger index = sender.tag;
     if (index < self.videoResources.count) {
         NSDictionary *resource = self.videoResources[index];
-        NSString *url = resource[@"url"];
-        UITableViewCell *cell = [self.videoListTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
-        UIView *accessoryView = cell.accessoryView;
-        UIButton *downloadButton = [accessoryView.subviews firstObject];
+        NSString *urlString = resource[@"url"];
+        VideoResourceTableViewCell *cell = [self.videoListTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+        UIButton *downloadButton = cell.downloadButton;
 
-        // 使用VideoDownloadManager下载视频
-        [[VideoDownloadManager sharedManager] downloadAndSaveVideo:[NSURL URLWithString:url] fromButton:downloadButton success:^{
-            [downloadButton setTitle:@"完成" forState:UIControlStateNormal];
-
-        } failure:^(NSError *error) {
-            [downloadButton setTitle:@"失败" forState:UIControlStateNormal];
-        }];
+        // 创建下载项
+        DownloadItem *downloadItem = [[DownloadItem alloc] init];
+        downloadItem.taskId = [NSUUID UUID].UUIDString;
+        downloadItem.url = urlString;
+        downloadItem.status = DownloadStatusWaiting;
+        
+        // 设置进度回调
+        downloadItem.progressBlock = ^(float progress) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [downloadButton setTitle:[NSString stringWithFormat:@"%.0f%%", progress * 100] forState:UIControlStateNormal];
+            });
+        };
+        
+        // 设置完成回调
+        downloadItem.completionBlock = ^(NSURL *location, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [downloadButton setTitle:@"失败" forState:UIControlStateNormal];
+                    downloadItem.status = DownloadStatusFailed;
+                } else {
+                    [downloadButton setTitle:@"完成" forState:UIControlStateNormal];
+                    downloadItem.status = DownloadStatusFinished;
+                }
+            });
+        };
+        
+        // 开始下载
+        [[DownloadManager sharedManager] startDownloadWithItem:downloadItem];
     }
+}
+
+#pragma mark - DownloadItemDelegate
+
+- (void)downloadItem:(DownloadItem *)item didUpdateProgress:(float)progress {
+    // 通过代理方法更新进度
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 查找对应的资源和cell
+        for (NSInteger i = 0; i < self.videoResources.count; i++) {
+            NSDictionary *resource = self.videoResources[i];
+            if ([resource[@"url"] isEqualToString:item.url]) {
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                VideoResourceTableViewCell *cell = [self.videoListTableView cellForRowAtIndexPath:indexPath];
+                if (cell) {
+                    [cell.downloadButton setTitle:[NSString stringWithFormat:@"%.0f%%", progress * 100] forState:UIControlStateNormal];
+                }
+                break;
+            }
+        }
+    });
 }
 
 - (void)updateVideoResources:(NSArray *)resources {
