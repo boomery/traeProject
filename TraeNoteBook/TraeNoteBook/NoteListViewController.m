@@ -159,7 +159,7 @@
     [cell configureWithTitle:note.title
                       detail:detailText
                thumbnailData:note.thumbnailData
-                     isVideo:note.isVideo];
+                        type:note.type];
     
     return cell;
 }
@@ -273,8 +273,8 @@
     
     // 普通笔记的编辑逻辑保持不变
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"编辑笔记"
-                                                                 message:nil
-                                                          preferredStyle:UIAlertControllerStyleAlert];
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleAlert];
     
     [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
         textField.placeholder = @"标题";

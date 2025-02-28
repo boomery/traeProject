@@ -42,6 +42,16 @@
     self.detailLabel.numberOfLines = 2;
     [self.contentView addSubview:self.detailLabel];
     
+    // 初始化类型标签
+    self.typeLabel = [[UILabel alloc] init];
+    self.typeLabel.font = [UIFont systemFontOfSize:12 weight:UIFontWeightMedium];
+    self.typeLabel.textColor = [UIColor systemBlueColor];
+    self.typeLabel.layer.cornerRadius = 4.0;
+    self.typeLabel.layer.masksToBounds = YES;
+    self.typeLabel.backgroundColor = [[UIColor systemBlueColor] colorWithAlphaComponent:0.1];
+    self.typeLabel.textAlignment = NSTextAlignmentCenter;
+    [self.contentView addSubview:self.typeLabel];
+    
     // 初始化下载按钮
     self.downloadButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.downloadButton setTitle:@"下载" forState:UIControlStateNormal];
@@ -72,22 +82,24 @@
         CGFloat labelX = CGRectGetMaxX(self.thumbnailImageView.frame) + padding;
         CGFloat labelWidth = contentWidth - labelX - padding - 70;
         
-        self.titleLabel.frame = CGRectMake(labelX, padding, labelWidth, 44);
+        self.titleLabel.frame = CGRectMake(labelX, padding, labelWidth - 60, 44);
+        self.typeLabel.frame = CGRectMake(CGRectGetMaxX(self.titleLabel.frame) + 8, padding + 2, 52, 20);
         self.detailLabel.frame = CGRectMake(labelX, CGRectGetMaxY(self.titleLabel.frame), labelWidth, 36);
         self.downloadButton.frame = CGRectMake(contentWidth - 80, (contentHeight - 30) / 2, 64, 30);
     } else {
         // 无缩略图时的布局
         CGFloat labelWidth = contentWidth - (padding * 2) - 70;
-        self.titleLabel.frame = CGRectMake(padding, padding, labelWidth, 44);
+        self.titleLabel.frame = CGRectMake(padding, padding, labelWidth - 60, 44);
+        self.typeLabel.frame = CGRectMake(CGRectGetMaxX(self.titleLabel.frame) + 8, padding + 2, 52, 20);
         self.detailLabel.frame = CGRectMake(padding, CGRectGetMaxY(self.titleLabel.frame), labelWidth, 36);
         self.downloadButton.frame = CGRectMake(contentWidth - 80, (contentHeight - 30) / 2, 64, 30);
     }
 }
 
 - (void)configureWithTitle:(NSString *)title
-                   detail:(NSString *)detail
+                    detail:(NSString *)detail
              thumbnailData:(NSData *)thumbnailData
-                  isVideo:(BOOL)isVideo {
+                      type:(NoteType)type {
     self.titleLabel.text = title;
     self.detailLabel.text = detail;
     
@@ -96,8 +108,33 @@
     } else {
         self.thumbnailImageView.image = nil;
     }
-    
-    self.downloadButton.hidden = !isVideo;
+    self.downloadButton.hidden = YES;
+    // 设置类型标签文本
+    switch (type) {
+        case NoteTypeText:
+            self.typeLabel.text = @"文本";
+            break;
+        case NoteTypeImage:
+            self.typeLabel.text = @"图片";
+            break;
+        case NoteTypeAudio:
+            self.typeLabel.text = @"音频";
+            
+            break;
+        case NoteTypeFeedVideo:
+            self.typeLabel.text = @"视频流";
+            self.downloadButton.hidden = NO;
+            break;
+        case NoteTypeWebUrl:
+            self.typeLabel.text = @"网页";
+            break;
+        case NoteTypeWebVideo:
+            self.typeLabel.text = @"视频源";
+            self.downloadButton.hidden = NO;
+            break;
+        default:
+            break;
+    }
     
     [self setNeedsLayout];
 }
