@@ -87,10 +87,53 @@ didFinishDownloadingToURL:(NSURL *)location {
     // 获取对应的下载项
     DownloadItem *item = self.downloadTasks[downloadTask];
     
+    // 检查源文件是否存在
+    if (![[NSFileManager defaultManager] fileExistsAtPath:location.path]) {
+        NSError *error = [NSError errorWithDomain:@"DownloadManager" code:-2 userInfo:@{NSLocalizedDescriptionKey: @"下载的临时文件不存在"}];
+        if (item && item.completionBlock) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                item.completionBlock(nil, error);
+            });
+        }
+        return;
+    }
+    
+    // 创建临时文件路径
+    NSString *tmpDirPath = NSTemporaryDirectory();
+    
+    // 确保临时目录存在
+    if (![[NSFileManager defaultManager] fileExistsAtPath:tmpDirPath]) {
+        NSError *createDirError;
+        if (![[NSFileManager defaultManager] createDirectoryAtPath:tmpDirPath withIntermediateDirectories:YES attributes:nil error:&createDirError]) {
+            if (item && item.completionBlock) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    item.completionBlock(nil, createDirError);
+                });
+            }
+            return;
+        }
+    }
+    
+    NSString *tmpFilePath = [tmpDirPath stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
+    tmpFilePath = [tmpFilePath stringByAppendingPathExtension:@"mp4"];
+    NSURL *tmpFileURL = [NSURL fileURLWithPath:tmpFilePath];
+    
+    // 将下载的文件移动到临时目录
+    NSError *moveError;
+    if (![[NSFileManager defaultManager] moveItemAtURL:location toURL:tmpFileURL error:&moveError]) {
+        NSLog(@"移动文件失败: %@", moveError);
+        if (item && item.completionBlock) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                item.completionBlock(nil, moveError);
+            });
+        }
+        return;
+    }
+    
     if (item && item.completionBlock) {
         // 在主线程回调完成
         dispatch_async(dispatch_get_main_queue(), ^{
-            item.completionBlock(location, nil);
+            item.completionBlock(tmpFileURL, nil);
         });
     }
     

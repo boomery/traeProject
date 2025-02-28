@@ -1,7 +1,7 @@
 #import "VideoDownloadManager.h"
 #import <Photos/Photos.h>
 #import <objc/runtime.h>
-
+#import "VideoSaveManager.h"
 @interface VideoDownloadManager ()
 @property (nonatomic, strong) NSURLSession *session;
 @property (nonatomic, strong) NSMutableArray<NSURLSessionDownloadTask *> *downloadTasks;
@@ -141,17 +141,45 @@
     void(^successBlock)(void) = objc_getAssociatedObject(downloadTask, "successBlock");
     void(^failureBlock)(NSError *) = objc_getAssociatedObject(downloadTask, "failureBlock");
     
+    // 检查源文件是否存在
+    if (![[NSFileManager defaultManager] fileExistsAtPath:location.path]) {
+        NSError *error = [NSError errorWithDomain:@"VideoDownloadManager" code:-2 userInfo:@{NSLocalizedDescriptionKey: @"下载的临时文件不存在"}];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (failureBlock) {
+                failureBlock(error);
+            }
+            [progressView removeFromSuperview];
+            button.hidden = NO;
+        });
+        return;
+    }
+    
     // 创建临时文件路径
     NSString *tmpDirPath = NSTemporaryDirectory();
+    
+    // 确保临时目录存在
+    if (![[NSFileManager defaultManager] fileExistsAtPath:tmpDirPath]) {
+        NSError *createDirError;
+        if (![[NSFileManager defaultManager] createDirectoryAtPath:tmpDirPath withIntermediateDirectories:YES attributes:nil error:&createDirError]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (failureBlock) {
+                    failureBlock(createDirError);
+                }
+                [progressView removeFromSuperview];
+                button.hidden = NO;
+            });
+            return;
+        }
+    }
+    
     NSString *tmpFilePath = [tmpDirPath stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
     tmpFilePath = [tmpFilePath stringByAppendingPathExtension:@"mp4"];
     NSURL *tmpFileURL = [NSURL fileURLWithPath:tmpFilePath];
     
     // 将下载的文件移动到临时目录
     NSError *moveError;
-    [[NSFileManager defaultManager] moveItemAtURL:location toURL:tmpFileURL error:&moveError];
-    
-    if (moveError) {
+    if (![[NSFileManager defaultManager] moveItemAtURL:location toURL:tmpFileURL error:&moveError]) {
+        NSLog(@"移动文件失败: %@", moveError);
         dispatch_async(dispatch_get_main_queue(), ^{
             if (failureBlock) {
                 failureBlock(moveError);
@@ -162,29 +190,20 @@
         return;
     }
     
-    // 保存到相册
-    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-        PHAssetCreationRequest *request = [PHAssetCreationRequest creationRequestForAsset];
-        [request addResourceWithType:PHAssetResourceTypeVideo fileURL:tmpFileURL options:nil];
-        request.creationDate = [NSDate date];
-    } completionHandler:^(BOOL success, NSError *error) {
-        // 清理临时文件
-        [[NSFileManager defaultManager] removeItemAtURL:tmpFileURL error:nil];
-        
+    // 使用VideoSaveManager保存到相册
+    [[VideoSaveManager sharedManager] saveVideoToAlbum:tmpFileURL success:^{
         dispatch_async(dispatch_get_main_queue(), ^{
             [progressView removeFromSuperview];
             button.hidden = NO;
             
-            if (success) {
-                if (successBlock) {
-                    successBlock();
-                }
-            } else {
-                if (failureBlock) {
-                    failureBlock(error);
-                }
+            if (successBlock) {
+                successBlock();
             }
         });
+    } failure:^(NSError *error) {
+        if (failureBlock) {
+            failureBlock(error);
+        }
     }];
     
     [self.downloadTasks removeObject:downloadTask];

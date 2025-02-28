@@ -12,7 +12,7 @@
 #import "VideoResourceTableViewCell.h"
 #import "DownloadItem.h"
 #import "DownloadManager.h"
-
+#import "VideoSaveManager.h"
 @interface WebViewController () <WKNavigationDelegate, WKUIDelegate, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UIProgressView *progressView;
@@ -39,7 +39,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     self.extendedLayoutIncludesOpaqueBars = YES;
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
@@ -168,7 +168,7 @@
     
     // 设置导航栏按钮
     [self setupNavigationItems];
-  
+    
     // 加载默认页面
     [self loadDefaultPage];
     
@@ -235,9 +235,9 @@
     
     //打开嗅探资源列表按钮
     self.openVideoListButton = [[UIBarButtonItem alloc] initWithTitle:@"列表 (0)"
-                                                             style:UIBarButtonItemStylePlain
-                                                            target:self
-                                                            action:@selector(toggleVideoListPanel)];
+                                                                style:UIBarButtonItemStylePlain
+                                                               target:self
+                                                               action:@selector(toggleVideoListPanel)];
     
     
     // 刷新按钮
@@ -291,21 +291,33 @@
 #pragma mark - Video List Panel
 
 - (void)setupVideoListPanel {
+    // 创建视频列表面板
+    self.videoListPanel = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 300)];
+    self.videoListPanel.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
+    [self.view addSubview:self.videoListPanel];
+    
+    // 创建底部控制栏容器
+    UIView *controlBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
+    controlBar.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
+    [self.videoListPanel addSubview:controlBar];
+    
     // 创建切换按钮
     self.togglePanelButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.togglePanelButton setTitle:@"视频资源 (0)" forState:UIControlStateNormal];
-    self.togglePanelButton.frame = CGRectMake(0, self.view.bounds.size.height - 44, self.view.bounds.size.width, 44);
-    self.togglePanelButton.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
+    self.togglePanelButton.frame = CGRectMake(0, 0, controlBar.bounds.size.width - 80, 44);
     [self.togglePanelButton addTarget:self action:@selector(toggleVideoListPanel) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.togglePanelButton];
+    [controlBar addSubview:self.togglePanelButton];
     
-    // 创建视频列表面板
-    self.videoListPanel = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 300)];
-    self.videoListPanel.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:self.videoListPanel];
+    // 添加清空按钮
+    UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [clearButton setTitle:@"清空列表" forState:UIControlStateNormal];
+    [clearButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    clearButton.frame = CGRectMake(controlBar.bounds.size.width - 80, 0, 80, 44);
+    [clearButton addTarget:self action:@selector(clearVideoList) forControlEvents:UIControlEventTouchUpInside];
+    [controlBar addSubview:clearButton];
     
     // 创建视频列表
-    self.videoListTableView = [[UITableView alloc] initWithFrame:self.videoListPanel.bounds style:UITableViewStylePlain];
+    self.videoListTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 44, self.videoListPanel.bounds.size.width, self.videoListPanel.bounds.size.height - 44) style:UITableViewStylePlain];
     self.videoListTableView.delegate = self;
     self.videoListTableView.dataSource = self;
     [self.videoListTableView registerClass:[VideoResourceTableViewCell class] forCellReuseIdentifier:@"VideoResourceCell"];
@@ -316,15 +328,14 @@
     self.isPanelExpanded = !self.isPanelExpanded;
     
     CGFloat panelHeight = 300;
-    CGFloat toggleButtonY = self.isPanelExpanded ? 
-        self.view.bounds.size.height - panelHeight - 44 : 
-        self.view.bounds.size.height - 44;
-    CGFloat panelY = self.isPanelExpanded ? 
-        self.view.bounds.size.height - panelHeight : 
-        self.view.bounds.size.height;
+    CGFloat toggleButtonY = self.isPanelExpanded ?
+    self.view.bounds.size.height - panelHeight - 44 :
+    self.view.bounds.size.height - 44;
+    CGFloat panelY = self.isPanelExpanded ?
+    self.view.bounds.size.height - panelHeight :
+    self.view.bounds.size.height;
     
     [UIView animateWithDuration:0.3 animations:^{
-        self.togglePanelButton.frame = CGRectMake(0, toggleButtonY, self.view.bounds.size.width, 44);
         self.videoListPanel.frame = CGRectMake(0, panelY, self.view.bounds.size.width, panelHeight);
     }];
 }
@@ -350,7 +361,7 @@
     
     NSDictionary *resource = self.videoResources[indexPath.row];
     [cell configureWithTitle:resource[@"title"]
-                       type:resource[@"type"]];
+                        type:resource[@"type"]];
     
     [cell.downloadButton addTarget:self action:@selector(downloadVideo:) forControlEvents:UIControlEventTouchUpInside];
     [cell.favoriteButton addTarget:self action:@selector(favoriteVideo:) forControlEvents:UIControlEventTouchUpInside];
@@ -359,6 +370,10 @@
     cell.favoriteButton.tag = indexPath.row;
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -410,7 +425,7 @@
         NSString *urlString = resource[@"url"];
         VideoResourceTableViewCell *cell = [self.videoListTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
         UIButton *downloadButton = cell.downloadButton;
-
+        
         // 创建下载项
         DownloadItem *downloadItem = [[DownloadItem alloc] init];
         downloadItem.taskId = [NSUUID UUID].UUIDString;
@@ -418,10 +433,15 @@
         downloadItem.status = DownloadStatusWaiting;
         
         // 设置进度回调
+        static NSTimeInterval lastUpdateTime = 0;
         downloadItem.progressBlock = ^(float progress) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [downloadButton setTitle:[NSString stringWithFormat:@"%.0f%%", progress * 100] forState:UIControlStateNormal];
-            });
+            NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
+            if (currentTime - lastUpdateTime >= 0.1) { // 至少间隔100ms
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [downloadButton setTitle:[NSString stringWithFormat:@"%.0f%%", progress * 100] forState:UIControlStateNormal];
+                });
+                lastUpdateTime = currentTime;
+            }
         };
         
         // 设置完成回调
@@ -430,36 +450,27 @@
                 if (error) {
                     [downloadButton setTitle:@"失败" forState:UIControlStateNormal];
                     downloadItem.status = DownloadStatusFailed;
+                    downloadButton.enabled = YES;
                 } else {
+                    [[VideoSaveManager sharedManager] saveVideoToAlbum:location success:^{
+                        [downloadButton setTitle:@"已保存" forState:UIControlStateNormal];
+                    } failure:^(NSError * _Nonnull error) {
+                        
+                    }];
                     [downloadButton setTitle:@"完成" forState:UIControlStateNormal];
                     downloadItem.status = DownloadStatusFinished;
+                    downloadButton.enabled = YES;
+                    
                 }
             });
         };
         
+        // 禁用下载按钮
+        downloadButton.enabled = NO;
+        
         // 开始下载
         [[DownloadManager sharedManager] startDownloadWithItem:downloadItem];
     }
-}
-
-#pragma mark - DownloadItemDelegate
-
-- (void)downloadItem:(DownloadItem *)item didUpdateProgress:(float)progress {
-    // 通过代理方法更新进度
-    dispatch_async(dispatch_get_main_queue(), ^{
-        // 查找对应的资源和cell
-        for (NSInteger i = 0; i < self.videoResources.count; i++) {
-            NSDictionary *resource = self.videoResources[i];
-            if ([resource[@"url"] isEqualToString:item.url]) {
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-                VideoResourceTableViewCell *cell = [self.videoListTableView cellForRowAtIndexPath:indexPath];
-                if (cell) {
-                    [cell.downloadButton setTitle:[NSString stringWithFormat:@"%.0f%%", progress * 100] forState:UIControlStateNormal];
-                }
-                break;
-            }
-        }
-    });
 }
 
 - (void)updateVideoResources:(NSArray *)resources {
@@ -474,5 +485,27 @@
     });
 }
 
+
+- (void)clearVideoList {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"清空列表"
+                                                                             message:@"确定要清空所有视频资源吗？"
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
+    
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定"
+                                                            style:UIAlertActionStyleDestructive
+                                                          handler:^(UIAlertAction * _Nonnull action) {
+        [self.videoResources removeAllObjects];
+        [self updateVideoResources:@[]];
+    }];
+    
+    [alertController addAction:cancelAction];
+    [alertController addAction:confirmAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
+}
 
 @end
