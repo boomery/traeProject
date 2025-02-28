@@ -9,8 +9,11 @@
 #import "AppDelegate.h"
 #import "Note+CoreDataClass.h"
 #import <AVKit/AVKit.h>
-#import "VideoDownloadManager.h"
+#import "DownloadManager.h"
+#import "DownloadItem.h"
 #import "NoteTableViewCell.h"
+#import <Photos/Photos.h>
+#import "SVProgressHUD.h"
 @interface NoteListViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) NSManagedObjectContext *context;
@@ -169,21 +172,54 @@
     
     NSURL *videoURL = [NSURL URLWithString:note.videoUrl];
     
-    [[VideoDownloadManager sharedManager] downloadAndSaveVideo:videoURL
-                                                  fromButton:button
-                                                    success:^{
-        [self showAlert:@"保存成功" message:@"视频已保存到相册"];
-    } failure:^(NSError *error) {
-        [self showAlert:@"保存失败" message:error.localizedDescription];
-    }];
-}
-
-- (void)showAlert:(NSString *)title message:(NSString *)message {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
-                                                                 message:message
-                                                          preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
-    [self presentViewController:alert animated:YES completion:nil];
+    // 创建下载项
+    DownloadItem *downloadItem = [[DownloadItem alloc] init];
+    downloadItem.url = note.videoUrl;
+    
+    // 设置进度回调
+    downloadItem.progressBlock = ^(float progress) {
+        // 更新下载按钮的标题显示进度
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString *progressText = [NSString stringWithFormat:@"%.0f%%", progress * 100];
+            [button setImage:nil forState:UIControlStateNormal];
+            [button setTitle:progressText forState:UIControlStateNormal];
+            button.enabled = NO;
+        });
+    };
+    
+    // 设置完成回调
+    downloadItem.completionBlock = ^(NSURL *fileURL, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // 恢复按钮状态
+            [button setTitle:@"下载" forState:UIControlStateNormal];
+            button.enabled = YES;
+            
+            if (error) {
+                [SVProgressHUD showErrorWithStatus:@"下载失败"];
+                return;
+            }
+            
+            // 保存视频到相册
+            if (fileURL) {
+                [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+                    [PHAssetChangeRequest creationRequestForAssetFromVideoAtFileURL:fileURL];
+                } completionHandler:^(BOOL success, NSError *error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (success) {
+                            [SVProgressHUD showSuccessWithStatus:@"保存成功"];
+                            // 删除临时文件
+                            [[NSFileManager defaultManager] removeItemAtURL:fileURL error:nil];
+                        } else {
+                            [SVProgressHUD showErrorWithStatus:@"保存失败"];
+                        }
+                    });
+                }];
+            }
+        });
+    };
+    
+    // 开始下载
+    [[DownloadManager sharedManager] startDownloadWithItem:downloadItem];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {

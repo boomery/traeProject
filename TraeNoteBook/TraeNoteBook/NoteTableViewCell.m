@@ -37,7 +37,7 @@
     
     // 初始化下载按钮
     self.downloadButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.downloadButton setImage:[UIImage systemImageNamed:@"arrow.down.circle"] forState:UIControlStateNormal];
+    [self.downloadButton setTitle:@"下载" forState:UIControlStateNormal];
     self.downloadButton.hidden = YES;
     [self.contentView addSubview:self.downloadButton];
 }
@@ -57,13 +57,13 @@
         
         self.titleLabel.frame = CGRectMake(labelX, 15, labelWidth, 20);
         self.detailLabel.frame = CGRectMake(labelX, CGRectGetMaxY(self.titleLabel.frame) + 5, labelWidth, 20);
-        self.downloadButton.frame = CGRectMake(contentWidth - 40, (contentHeight - 30) / 2, 30, 30);
+        self.downloadButton.frame = CGRectMake(contentWidth - 70, (contentHeight - 30) / 2, 60, 30);
     } else {
         // 无缩略图时的布局
         CGFloat labelWidth = contentWidth - 30;
         self.titleLabel.frame = CGRectMake(15, 10, labelWidth, 20);
         self.detailLabel.frame = CGRectMake(15, CGRectGetMaxY(self.titleLabel.frame) + 5, labelWidth, 20);
-        self.downloadButton.frame = CGRectMake(contentWidth - 40, (contentHeight - 30) / 2, 30, 30);
+        self.downloadButton.frame = CGRectMake(contentWidth - 70, (contentHeight - 30) / 2, 60, 30);
     }
 }
 
