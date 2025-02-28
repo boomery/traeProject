@@ -11,6 +11,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+//增加笔记类型枚举
+typedef NS_ENUM(NSInteger, NoteType) {
+    NoteTypeText,
+    NoteTypeImage,
+    NoteTypeAudio,
+    NoteTypeFeedVideo,
+    NoteTypeWebUrl,
+    NoteTypeWebVideo
+};
+
 @interface Note : NSManagedObject
 
 @property (nonatomic, strong) NSString *title;
@@ -20,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isVideo;
 @property (nonatomic, strong) NSString *videoUrl;
 @property (nonatomic, strong) NSData *thumbnailData;
+@property (nonatomic, assign) NoteType type;
 
 @end
 

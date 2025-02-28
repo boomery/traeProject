@@ -109,6 +109,7 @@
         note.content = content;
         note.createTime = [NSDate date];
         note.updateTime = [NSDate date];
+        note.type = NoteTypeText;
         
         NSError *error = nil;
         if ([self.context save:&error]) {

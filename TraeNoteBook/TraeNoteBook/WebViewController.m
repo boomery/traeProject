@@ -308,6 +308,7 @@
     
     // 创建新的笔记
     Note *note = [NSEntityDescription insertNewObjectForEntityForName:@"Note" inManagedObjectContext:self.context];
+    note.type = NoteTypeWebUrl;
     note.title = self.webView.title;
     note.content = self.webView.URL.absoluteString;
     note.createTime = [NSDate date];
@@ -485,6 +486,7 @@
         
         // 创建新的Note对象
         Note *note = [NSEntityDescription insertNewObjectForEntityForName:@"Note" inManagedObjectContext:self.context];
+        note.type = NoteTypeWebVideo;
         note.title = resource[@"title"] ?: @"未知视频";
         note.content = [NSString stringWithFormat:@"视频类型：%@", resource[@"type"]];
         note.videoUrl = resource[@"url"];

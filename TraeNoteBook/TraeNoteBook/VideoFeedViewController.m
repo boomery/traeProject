@@ -72,6 +72,7 @@
         // 创建新的笔记对象
         Note *note = [NSEntityDescription insertNewObjectForEntityForName:@"Note"
                                                  inManagedObjectContext:self.context];
+        note.type = NoteTypeFeedVideo;
         note.title = videoInfo[@"title"];
         note.content = @"收藏的视频";
         note.createTime = [NSDate date];
