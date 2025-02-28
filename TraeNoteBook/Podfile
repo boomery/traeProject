@@ -7,6 +7,7 @@ target 'TraeNoteBook' do
 
   # Pods for TraeNoteBook
   pod 'MJRefresh'
+  pod 'SVProgressHUD'
 
   target 'TraeNoteBookTests' do
     inherit! :search_paths

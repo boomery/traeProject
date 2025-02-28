@@ -13,6 +13,7 @@
 #import "VideoFeedCollectionViewCell.h"
 #import <Photos/Photos.h>
 #import "VideoDownloadManager.h"
+#import "SVProgressHUD.h"
 @interface VideoFeedViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -99,12 +100,8 @@
             // 发送视频收藏成功的通知
             [[NSNotificationCenter defaultCenter] postNotificationName:@"VideoFavoriteSuccessNotification" object:nil];
             
-            // 显示保存成功提示
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示"
-                                                                         message:@"视频收藏成功"
-                                                                  preferredStyle:UIAlertControllerStyleAlert];
-            [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
-            [self presentViewController:alert animated:YES completion:nil];
+            // 显示收藏成功提示
+            [SVProgressHUD showSuccessWithStatus:@"收藏成功"];
         } else {
             NSLog(@"保存视频笔记失败: %@", error);
             button.selected = NO;
@@ -449,9 +446,9 @@
     [[VideoDownloadManager sharedManager] downloadAndSaveVideo:videoURL
                                                   fromButton:button
                                                     success:^{
-        [self showAlert:@"保存成功" message:@"视频已保存到相册"];
+        [SVProgressHUD showSuccessWithStatus:@"视频已保存到相册"];
     } failure:^(NSError *error) {
-        [self showAlert:@"保存失败" message:error.localizedDescription];
+        [SVProgressHUD showErrorWithStatus:@"保存视频失败"];
     }];
 }
 
@@ -472,19 +469,11 @@
         UIButton *button = objc_getAssociatedObject(task, "saveButton");
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self showAlert:@"下载失败" message:error.localizedDescription];
+            [SVProgressHUD showErrorWithStatus:@"下载失败"];
             [progressView removeFromSuperview];
             button.hidden = NO;
         });
     }
-}
-
-- (void)showAlert:(NSString *)title message:(NSString *)message {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
-                                                                 message:message
-                                                          preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil]];
-    [self presentViewController:alert animated:YES completion:nil];
 }
 
 @end

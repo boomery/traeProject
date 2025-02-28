@@ -7,9 +7,11 @@
 
 #import <UIKit/UIKit.h>
 #import <WebKit/WebKit.h>
+#import <CoreData/CoreData.h>
 
-@interface WebViewController : UIViewController
+@interface WebViewController : UIViewController <WKScriptMessageHandler>
 
 @property (nonatomic, strong) WKWebView *webView;
+@property (nonatomic, strong) NSManagedObjectContext *context;
 
 @end

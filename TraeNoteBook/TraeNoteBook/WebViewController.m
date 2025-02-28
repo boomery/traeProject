@@ -7,6 +7,9 @@
 
 #import "WebViewController.h"
 #import "VideoDownloadManager.h"
+#import "Note+CoreDataClass.h"
+#import "AppDelegate.h"
+#import "SVProgressHUD.h"
 @interface WebViewController () <WKNavigationDelegate, WKUIDelegate, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UIProgressView *progressView;
@@ -160,6 +163,10 @@
   
     // 加载默认页面
     [self loadDefaultPage];
+    
+    // 获取CoreData上下文
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.context = appDelegate.persistentContainer.viewContext;
     
     // 初始化视频列表面板
     [self setupVideoListPanel];
@@ -338,15 +345,66 @@
     cell.detailTextLabel.text = [NSString stringWithFormat:@"类型: %@", resource[@"type"]];
     cell.textLabel.font = [UIFont systemFontOfSize:14];
     
+    // 创建下载和收藏按钮的容器视图
+    UIView *accessoryView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 120, 30)];
+    
     // 添加下载按钮
     UIButton *downloadButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [downloadButton setTitle:@"下载" forState:UIControlStateNormal];
     downloadButton.frame = CGRectMake(0, 0, 60, 30);
     downloadButton.tag = indexPath.row;
     [downloadButton addTarget:self action:@selector(downloadVideo:) forControlEvents:UIControlEventTouchUpInside];
-    cell.accessoryView = downloadButton;
+    [accessoryView addSubview:downloadButton];
+    
+    // 添加收藏按钮
+    UIButton *favoriteButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [favoriteButton setTitle:@"收藏" forState:UIControlStateNormal];
+    favoriteButton.frame = CGRectMake(60, 0, 60, 30);
+    favoriteButton.tag = indexPath.row;
+    [favoriteButton addTarget:self action:@selector(favoriteVideo:) forControlEvents:UIControlEventTouchUpInside];
+    [accessoryView addSubview:favoriteButton];
+    
+    cell.accessoryView = accessoryView;
     
     return cell;
+}
+
+// 收藏视频到记事本
+- (void)favoriteVideo:(UIButton *)sender {
+    NSInteger index = sender.tag;
+    if (index < self.videoResources.count) {
+        NSDictionary *resource = self.videoResources[index];
+        
+        // 创建新的Note对象
+        Note *note = [NSEntityDescription insertNewObjectForEntityForName:@"Note" inManagedObjectContext:self.context];
+        note.title = resource[@"title"] ?: @"未知视频";
+        note.content = [NSString stringWithFormat:@"视频类型：%@", resource[@"type"]];
+        note.videoUrl = resource[@"url"];
+        note.isVideo = YES;
+        note.createTime = [NSDate date];
+        note.updateTime = [NSDate date];
+        
+        // 保存到Core Data
+        NSError *error = nil;
+        if ([self.context save:&error]) {
+            // 发送通知，通知记事本页面刷新列表
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"VideoFavoriteSuccessNotification" object:nil];
+            
+            // 更新按钮状态
+            UITableViewCell *cell = [self.videoListTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+            UIView *accessoryView = cell.accessoryView;
+            UIButton *favoriteButton = [accessoryView.subviews lastObject];
+            [favoriteButton setTitle:@"已收藏" forState:UIControlStateNormal];
+            favoriteButton.enabled = NO;
+            
+            // 显示成功提示
+            NSLog(@"收藏浏览器视频成功");
+            [SVProgressHUD showSuccessWithStatus:@"收藏成功"];
+        } else {
+            NSLog(@"收藏浏览器视频失败: %@", error);
+            [SVProgressHUD showErrorWithStatus:@"收藏失败"];
+        }
+    }
 }
 
 - (void)downloadVideo:(UIButton *)sender {
@@ -355,10 +413,11 @@
         NSDictionary *resource = self.videoResources[index];
         NSString *url = resource[@"url"];
         UITableViewCell *cell = [self.videoListTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
-        UIButton *downloadButton = (UIButton *)cell.accessoryView;
+        UIView *accessoryView = cell.accessoryView;
+        UIButton *downloadButton = [accessoryView.subviews firstObject];
 
         // 使用VideoDownloadManager下载视频
-        [[VideoDownloadManager sharedManager] downloadAndSaveVideo:[NSURL URLWithString:url] fromButton:sender success:^{
+        [[VideoDownloadManager sharedManager] downloadAndSaveVideo:[NSURL URLWithString:url] fromButton:downloadButton success:^{
             [downloadButton setTitle:@"完成" forState:UIControlStateNormal];
 
         } failure:^(NSError *error) {

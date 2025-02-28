@@ -1,16 +1,22 @@
 PODS:
   - MJRefresh (3.7.9)
+  - SVProgressHUD (2.3.1):
+    - SVProgressHUD/Core (= 2.3.1)
+  - SVProgressHUD/Core (2.3.1)
 
 DEPENDENCIES:
   - MJRefresh
+  - SVProgressHUD
 
 SPEC REPOS:
   trunk:
     - MJRefresh
+    - SVProgressHUD
 
 SPEC CHECKSUMS:
   MJRefresh: ff9e531227924c84ce459338414550a05d2aea78
+  SVProgressHUD: 4837c74bdfe2e51e8821c397825996a8d7de6e22
 
-PODFILE CHECKSUM: 937c3e7fee15a757b50e841ce9bafc02e095df5a
+PODFILE CHECKSUM: 2db5808b25c493489d58fb25df3b152095c907e7
 
 COCOAPODS: 1.15.2
