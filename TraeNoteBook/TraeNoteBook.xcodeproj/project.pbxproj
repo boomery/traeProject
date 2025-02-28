@@ -32,6 +32,8 @@
 		3F33F32F2D715C440035506E /* DownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F32E2D715C440035506E /* DownloadItem.m */; };
 		3F33F3322D715C9B0035506E /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3312D715C9B0035506E /* DownloadManager.m */; };
 		3F33F3352D7180FA0035506E /* VideoSaveManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3342D7180FA0035506E /* VideoSaveManager.m */; };
+		3F33F3382D718F140035506E /* BrowsingHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3362D718F140035506E /* BrowsingHistoryViewController.m */; };
+		3F33F33B2D718F840035506E /* BrowsingHistory+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F33F3392D718F840035506E /* BrowsingHistory+CoreDataClass.m */; };
 		80A3241BC093978B47A74F70 /* Pods_TraeNoteBookTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 826F268F058E132E14C0066B /* Pods_TraeNoteBookTests.framework */; };
 		EFBC7C83CAC745496B0D19B6 /* Pods_TraeNoteBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C88FC051CA59615FC7EF25A /* Pods_TraeNoteBook.framework */; };
 /* End PBXBuildFile section */
@@ -100,6 +102,10 @@
 		3F33F3312D715C9B0035506E /* DownloadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DownloadManager.m; sourceTree = "<group>"; };
 		3F33F3332D7180FA0035506E /* VideoSaveManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoSaveManager.h; sourceTree = "<group>"; };
 		3F33F3342D7180FA0035506E /* VideoSaveManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoSaveManager.m; sourceTree = "<group>"; };
+		3F33F3362D718F140035506E /* BrowsingHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowsingHistoryViewController.m; sourceTree = "<group>"; };
+		3F33F3372D718F140035506E /* BrowsingHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowsingHistoryViewController.h; sourceTree = "<group>"; };
+		3F33F3392D718F840035506E /* BrowsingHistory+CoreDataClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "BrowsingHistory+CoreDataClass.m"; sourceTree = "<group>"; };
+		3F33F33A2D718F840035506E /* BrowsingHistory+CoreDataClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BrowsingHistory+CoreDataClass.h"; sourceTree = "<group>"; };
 		4E43B8BB6A7B1D62D63316FE /* Pods-TraeNoteBook-TraeNoteBookUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TraeNoteBook-TraeNoteBookUITests.release.xcconfig"; path = "Target Support Files/Pods-TraeNoteBook-TraeNoteBookUITests/Pods-TraeNoteBook-TraeNoteBookUITests.release.xcconfig"; sourceTree = "<group>"; };
 		81056A3AF21D93B7E8C9A077 /* Pods-TraeNoteBookTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TraeNoteBookTests.debug.xcconfig"; path = "Target Support Files/Pods-TraeNoteBookTests/Pods-TraeNoteBookTests.debug.xcconfig"; sourceTree = "<group>"; };
 		826F268F058E132E14C0066B /* Pods_TraeNoteBookTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TraeNoteBookTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -171,6 +177,8 @@
 				3F33F2B82D6EF1780035506E /* Main.storyboard */,
 				3F33F30F2D6EF3740035506E /* Note+CoreDataClass.h */,
 				3F33F3102D6EF3740035506E /* Note+CoreDataClass.m */,
+				3F33F33A2D718F840035506E /* BrowsingHistory+CoreDataClass.h */,
+				3F33F3392D718F840035506E /* BrowsingHistory+CoreDataClass.m */,
 				3F33F3082D6EF3190035506E /* NoteListViewController.h */,
 				3F33F30A2D6EF3190035506E /* NoteListViewController.m */,
 				3F33F3272D7150280035506E /* NoteTableViewCell.h */,
@@ -179,6 +187,8 @@
 				3F33F3122D6EF93D0035506E /* VideoFeedViewController.m */,
 				3F33F3252D7042100035506E /* WebViewController.h */,
 				3F33F3242D7042100035506E /* WebViewController.m */,
+				3F33F3372D718F140035506E /* BrowsingHistoryViewController.h */,
+				3F33F3362D718F140035506E /* BrowsingHistoryViewController.m */,
 				3F33F32B2D715AF30035506E /* VideoResourceTableViewCell.h */,
 				3F33F32A2D715AF30035506E /* VideoResourceTableViewCell.m */,
 				3F33F3222D703D050035506E /* VideoDownloadManager.h */,
@@ -487,6 +497,7 @@
 				3F33F3292D7150280035506E /* NoteTableViewCell.m in Sources */,
 				3F33F31E2D700EAF0035506E /* TraeNoteBook.xcdatamodeld in Sources */,
 				3F33F30E2D6EF31A0035506E /* NoteListViewController.m in Sources */,
+				3F33F3382D718F140035506E /* BrowsingHistoryViewController.m in Sources */,
 				3F33F30B2D6EF31A0035506E /* SceneDelegate.m in Sources */,
 				3F33F32C2D715AF30035506E /* VideoResourceTableViewCell.m in Sources */,
 				3F33F31B2D7002640035506E /* VideoFeedCacheManager.m in Sources */,
@@ -495,6 +506,7 @@
 				3F33F3352D7180FA0035506E /* VideoSaveManager.m in Sources */,
 				3F33F2B72D6EF1780035506E /* ViewController.m in Sources */,
 				3F33F3142D6EF93D0035506E /* VideoFeedViewController.m in Sources */,
+				3F33F33B2D718F840035506E /* BrowsingHistory+CoreDataClass.m in Sources */,
 				3F33F2B12D6EF1780035506E /* AppDelegate.m in Sources */,
 				3F33F3232D703D050035506E /* VideoDownloadManager.m in Sources */,
 				3F33F3322D715C9B0035506E /* DownloadManager.m in Sources */,

@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22758" systemVersion="23H311" minimumToolsVersion="Automatic" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+    <entity name="BrowsingHistory" representedClassName="BrowsingHistory" syncable="YES">
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="url" optional="YES" attributeType="String"/>
+        <attribute name="visitTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
     <entity name="Note" representedClassName="Note" syncable="YES">
         <attribute name="content" optional="YES" attributeType="String"/>
         <attribute name="createTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="isVideo" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="thumbnailData" optional="YES" attributeType="Binary"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <attribute name="updateTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="videoUrl" optional="YES" attributeType="String"/>
-        <attribute name="thumbnailData" optional="YES" attributeType="Binary"/>
     </entity>
 </model>

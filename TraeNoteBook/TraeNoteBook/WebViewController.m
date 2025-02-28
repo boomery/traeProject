@@ -13,11 +13,13 @@
 #import "DownloadItem.h"
 #import "DownloadManager.h"
 #import "VideoSaveManager.h"
+#import "BrowsingHistoryViewController.h"
 @interface WebViewController () <WKNavigationDelegate, WKUIDelegate, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic, strong) UIBarButtonItem *backButton;
 @property (nonatomic, strong) UIBarButtonItem *forwardButton;
+@property (nonatomic, strong) UIBarButtonItem *historyButton;
 @property (nonatomic, strong) UIBarButtonItem *openVideoListButton;
 @property (nonatomic, strong) UIBarButtonItem *refreshButton;
 @property (nonatomic, strong) UITextField *urlTextField;
@@ -36,6 +38,13 @@
 - (void)dealloc {
     [self.webView removeObserver:self forKeyPath:@"estimatedProgress"];
 }
+
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.navigationController setToolbarHidden:NO animated:YES];
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -215,6 +224,9 @@
     self.forwardButton.enabled = [webView canGoForward];
     self.title = webView.title;
     self.urlTextField.text = webView.URL.absoluteString;
+    
+    // 保存浏览历史
+    [self saveBrowsingHistory];
 }
 
 - (void)setupNavigationItems {
@@ -232,6 +244,11 @@
                                                          action:@selector(goForward)];
     self.forwardButton.enabled = NO;
     
+    //浏览历史纪录按钮
+    self.historyButton = [[UIBarButtonItem alloc] initWithTitle:@"历史"
+                                                          style:UIBarButtonItemStylePlain
+                                                         target:self
+                                                         action:@selector(goHistory)];
     
     //打开嗅探资源列表按钮
     self.openVideoListButton = [[UIBarButtonItem alloc] initWithTitle:@"列表 (0)"
@@ -249,11 +266,49 @@
     UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
                                                                                    target:nil
                                                                                    action:nil];
-    self.toolbarItems = @[self.backButton, flexibleSpace, self.forwardButton, flexibleSpace, self.openVideoListButton, self.refreshButton];
+    self.toolbarItems = @[self.historyButton,self.backButton, flexibleSpace, self.forwardButton,  flexibleSpace, self.openVideoListButton, self.refreshButton];
     self.navigationController.toolbarHidden = NO;
 }
 
 #pragma mark - Actions
+
+- (void)goHistory {
+    BrowsingHistoryViewController *historyVC = [[BrowsingHistoryViewController alloc] init];
+    historyVC.hidesBottomBarWhenPushed = YES;
+    historyVC.didSelectURL = ^(NSURL *url) {
+        if (url) {
+            NSURLRequest *request = [NSURLRequest requestWithURL:url];
+            [self.webView loadRequest:request];
+        }
+    };
+    [self.navigationController pushViewController:historyVC animated:YES];
+}
+
+- (void)saveBrowsingHistory {
+    if (!self.webView.URL || !self.webView.title) return;
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"BrowsingHistory"];
+    request.predicate = [NSPredicate predicateWithFormat:@"url == %@", self.webView.URL.absoluteString];
+    
+    NSError *error = nil;
+    NSArray *results = [self.context executeFetchRequest:request error:&error];
+    
+    NSManagedObject *historyItem = nil;
+    if (results.count > 0) {
+        historyItem = results.firstObject;
+    } else {
+        historyItem = [NSEntityDescription insertNewObjectForEntityForName:@"BrowsingHistory"
+                                                    inManagedObjectContext:self.context];
+        [historyItem setValue:self.webView.URL.absoluteString forKey:@"url"];
+    }
+    
+    [historyItem setValue:self.webView.title forKey:@"title"];
+    [historyItem setValue:[NSDate date] forKey:@"visitTime"];
+    
+    if (![self.context save:&error]) {
+        NSLog(@"保存浏览历史失败: %@", error);
+    }
+}
 
 - (void)goBack {
     if ([self.webView canGoBack]) {
