@@ -274,8 +274,8 @@
                 if (videoUrl) {
                     NSDictionary *videoInfo = @{
                         @"title": @"短视频",
-//                        @"url": videoUrl,
-                        @"url":@"https://media.w3.org/2010/05/sintel/trailer.mp4",
+                        @"url": videoUrl,
+//                        @"url":@"https://media.w3.org/2010/05/sintel/trailer.mp4",
                         @"cover": @""
                     };
                     
